@@ -74,12 +74,12 @@ public class Login extends JFrame {
 		lblNewLabel_1.setBackground(Color.WHITE);
 		lblNewLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 24));
 		lblNewLabel_1.setForeground(Color.WHITE);
-		lblNewLabel_1.setBounds(230, 5, 250, 29);
+		lblNewLabel_1.setBounds((dim.width/4)-125, 5, 250, 29);
 		contentPane.add(lblNewLabel_1);
 		
 		txtPassword = new JPasswordField();
 		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtPassword.setBounds(255, 187, 200, 23);
+		txtPassword.setBounds((dim.width/4)-100, 187, 200, 23);
 		txtPassword.setText("1234");
 		contentPane.add(txtPassword);
 		
@@ -87,18 +87,18 @@ public class Login extends JFrame {
 		lblIniciarSesion.setForeground(Color.WHITE);
 		lblIniciarSesion.setFont(new Font("Times New Roman", Font.PLAIN, 24));
 		lblIniciarSesion.setBackground(Color.WHITE);
-		lblIniciarSesion.setBounds(255, 88, 200, 29);
+		lblIniciarSesion.setBounds((dim.width/4)-100, 88, 200, 29);
 		contentPane.add(lblIniciarSesion);
 		
 		JLabel lblNewLabel = new JLabel("Usuario:");
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(200, 129, 55, 23);
+		lblNewLabel.setBounds((dim.width/4)-155, 129, 55, 23);
 		contentPane.add(lblNewLabel);
 		
 		txtUser = new JTextField();
 		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtUser.setBounds(255, 129, 200, 23);
+		txtUser.setBounds((dim.width/4)-100, 129, 200, 23);
 		txtUser.setText("Admin");
 		contentPane.add(txtUser);
 		txtUser.setColumns(10);
@@ -106,7 +106,7 @@ public class Login extends JFrame {
 		lblContrasena = new JLabel("Contrasena:");
 		lblContrasena.setForeground(Color.WHITE);
 		lblContrasena.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblContrasena.setBounds(175, 187, 80, 23);
+		lblContrasena.setBounds((dim.width/4)-175, 187, 80, 23);
 		contentPane.add(lblContrasena);
 		
 		JButton btnNewButton = new JButton("Entrar");
@@ -134,7 +134,7 @@ public class Login extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnNewButton.setBounds(375, 234, 80, 23);
+		btnNewButton.setBounds((dim.width/4)+20, 234, 80, 23);
 		contentPane.add(btnNewButton);
 		
 		btnLimpiar = new JButton("Limpiar");
@@ -145,11 +145,11 @@ public class Login extends JFrame {
 			}
 		});
 		btnLimpiar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnLimpiar.setBounds(255, 234, 80, 23);
+		btnLimpiar.setBounds((dim.width/4)-100, 234, 80, 23);
 		contentPane.add(btnLimpiar);
 		
 		jlabelImagen = new JLabel("New label");
-		jlabelImagen.setBounds(0, 0, 634, 484);
+		jlabelImagen.setBounds(0, 0, dim.width/2, dim.height/2);
 		ImageIcon fondo = new ImageIcon("src/img/hospital1.jpg");
 		Icon icono = new ImageIcon(fondo.getImage().getScaledInstance(jlabelImagen.getWidth(), jlabelImagen.getHeight(), Image.SCALE_DEFAULT));
 		jlabelImagen.setIcon(icono);
