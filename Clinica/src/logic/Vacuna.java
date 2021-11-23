@@ -4,15 +4,19 @@ public class Vacuna {
 
 	private String codigo;
 	private String nombre;
-	int dosis;
+	private int dosis;
+	private String EnContraDe;
 	private String fabricante;
+	private String efectos;
 	
-	public Vacuna(String codigo, String nombre, int dosis, String fabricante) {
+	public Vacuna(String codigo, String nombre, String EnContraDe, int dosis, String fabricante, String efectos) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.dosis = dosis;
+		this.EnContraDe = EnContraDe;
 		this.fabricante = fabricante;
+		this.efectos = efectos;
 	}
 	
 	public String getCodigo() {
@@ -40,5 +44,19 @@ public class Vacuna {
 		this.fabricante = fabricante;
 	}
 
-	
+	public String getEnContraDe() {
+		return EnContraDe;
+	}
+
+	public void setEnContraDe(String enContraDe) {
+		EnContraDe = enContraDe;
+	}
+
+	public String getEfectos() {
+		return efectos;
+	}
+
+	public void setEfectos(String efectos) {
+		this.efectos = efectos;
+	}	
 }

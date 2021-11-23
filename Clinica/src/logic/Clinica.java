@@ -1,7 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Clinica {
 
@@ -11,6 +10,10 @@ public class Clinica {
 	private ArrayList<Enfermedad> misEnfermedades;
 	private ArrayList<CitaMedica> misCitas;
 	private static Clinica clinica;
+	private int generadorCodigoEnfermedad = 1;
+	private int generadorCodigoVacuna = 1;
+	private int generadorCodigoUserA = 1;
+	private int generadorCodigoDoctor = 1;
 	
 	private Clinica() {
 		super();
@@ -19,6 +22,22 @@ public class Clinica {
 		misUsuarios = new ArrayList<>();
 		misEnfermedades = new ArrayList<>();
 		misCitas = new ArrayList<>();
+	}
+	
+	public int getGeneradorCodigoEnfermedad() {
+		return generadorCodigoEnfermedad;
+	}
+
+	public int getGeneradorCodigoVacuna() {
+		return generadorCodigoVacuna;
+	}
+
+	public int getGeneradorCodigoUserA() {
+		return generadorCodigoUserA;
+	}
+
+	public int getGeneradorCodigoDoctor() {
+		return generadorCodigoDoctor;
 	}
 	
 	public static Clinica getInstance() {
@@ -33,18 +52,40 @@ public class Clinica {
 	
 	public void insertarVacuna(Vacuna v) {
 		misVacunas.add(v);
+		generadorCodigoVacuna++;
 	}
 
 	public void insertarUsuario(Usuario u) {
 		misUsuarios.add(u);
+		generadorCodigoUserA++;
+	}
+	
+	public void insertarDoctor(Usuario u) {
+		misUsuarios.add(u);
+		generadorCodigoDoctor++;
 	}
 	
 	public void insertarEnfermedad(Enfermedad e) {
 		misEnfermedades.add(e);
+		generadorCodigoEnfermedad++;
 	}
 	
 	public void insertarCita(CitaMedica c) {
 		misCitas.add(c);
+	}
+	
+	public Usuario validarUser(String user, String password) {
+		boolean encontrado = false;
+		Usuario usuario = null;
+		int i = 0;
+		while(!encontrado && i < misUsuarios.size()) {
+			if(misUsuarios.get(i).getLogin().equals(user) && misUsuarios.get(i).getPassword().equals(password)) {
+				encontrado = true;
+				usuario = misUsuarios.get(i);
+			}
+			i++;
+		}
+		return usuario;
 	}
 	
 	public Paciente buscarPaciente(String cedula)
