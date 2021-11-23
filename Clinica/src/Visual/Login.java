@@ -149,7 +149,7 @@ public class Login extends JFrame {
 		contentPane.add(btnLimpiar);
 		
 		jlabelImagen = new JLabel("New label");
-		jlabelImagen.setBounds(0, 0, 711, 400);
+		jlabelImagen.setBounds(0, 0, 634, 484);
 		ImageIcon fondo = new ImageIcon("src/img/hospital1.jpg");
 		Icon icono = new ImageIcon(fondo.getImage().getScaledInstance(jlabelImagen.getWidth(), jlabelImagen.getHeight(), Image.SCALE_DEFAULT));
 		jlabelImagen.setIcon(icono);
