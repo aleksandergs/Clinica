@@ -60,13 +60,14 @@ public class RegUsuario extends JDialog {
 	private JLabel lblAvisoTelefono;
 	private JLabel lblAvisoEsp;
 	private JLabel lblAvisoClave2;
+	private Usuario updated = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegUsuario dialog = new RegUsuario();
+			RegUsuario dialog = new RegUsuario(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -77,11 +78,17 @@ public class RegUsuario extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegUsuario() {
+	public RegUsuario(Usuario user) {
 		setAlwaysOnTop(true);
 		setResizable(false);
 		setModal(true);
+		updated = user;
 		setBounds(100, 100, 550, 434);
+		if(updated == null){
+			setTitle("Registrar Usuario");
+		}else {
+			setTitle("Modificar Usuario");
+		}
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -104,7 +111,12 @@ public class RegUsuario extends JDialog {
 		txtID.setEditable(false);
 		txtID.setColumns(10);
 		txtID.setBounds(75, 34, 144, 23);
-		txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoUserA());
+		if(updated != null) {
+			txtID.setText(updated.getCodigoUsuario());
+		}
+		else {
+			txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoUserA());
+		}
 		panel.add(txtID);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
@@ -123,6 +135,9 @@ public class RegUsuario extends JDialog {
 		txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(75, 64, 415, 23);
+		if(updated != null) {
+			txtNombre.setText(updated.getNombre());
+		}
 		panel.add(txtNombre);
 		
 		MaskFormatter cedula = null;
@@ -141,6 +156,10 @@ public class RegUsuario extends JDialog {
 		txtCedula.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtCedula.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
 		txtCedula.setBounds(75, 94, 173, 23);
+		if(updated != null) {
+			txtCedula.setEditable(false);
+			txtCedula.setText(updated.getCedulaUsuario());
+		}
 		panel.add(txtCedula);
 		
 		JLabel label_1 = new JLabel("C\u00E9dula:");
@@ -162,6 +181,9 @@ public class RegUsuario extends JDialog {
 			}
 		});
 		txtLogin.setBounds(75, 124, 173, 23);
+		if(updated != null) {
+			txtLogin.setText(updated.getLogin());
+		}
 		panel.add(txtLogin);
 		txtLogin.setColumns(10);
 		
@@ -188,6 +210,9 @@ public class RegUsuario extends JDialog {
 		txtTelefono.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtTelefono.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
 		txtTelefono.setBounds(317, 94, 173, 23);
+		if(updated != null) {
+			txtTelefono.setText(updated.getTelefono());
+		}
 		panel.add(txtTelefono);
 		
 		JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
@@ -209,6 +234,9 @@ public class RegUsuario extends JDialog {
 			}
 		});
 		txtContrasena1.setBounds(75, 154, 173, 23);
+		if(updated != null) {
+			txtContrasena1.setText(updated.getPassword());
+		}
 		panel.add(txtContrasena1);
 		
 		txtContrasena2 = new JPasswordField();
@@ -220,6 +248,9 @@ public class RegUsuario extends JDialog {
 			}
 		});
 		txtContrasena2.setBounds(320, 154, 170, 23);
+		if(updated != null) {
+			txtContrasena2.setText(updated.getPassword());
+		}
 		panel.add(txtContrasena2);
 		
 		lblAvisoNombre = new JLabel("");
@@ -312,6 +343,33 @@ public class RegUsuario extends JDialog {
 		panelDoctor.setVisible(false);
 		panelDoctor.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelDoctor.setBounds(10, 310, 512, 40);
+		if(updated != null){
+			if(updated instanceof Medico) {
+				rdbtnDoctor.setSelected(true);
+				rdbtnDoctor.setEnabled(false);
+				rdbtnAdministrador.setSelected(false);
+				rdbtnAdministrador.setEnabled(false);
+				rdbtnRecepcionista.setSelected(false);
+				rdbtnRecepcionista.setEnabled(false);
+				panelDoctor.setVisible(true);
+			}
+			else if(((Administrador) updated).getPuestoLaboral().equalsIgnoreCase("Administrador")) {
+				rdbtnDoctor.setSelected(false);
+				rdbtnDoctor.setEnabled(false);
+				rdbtnAdministrador.setSelected(true);
+				rdbtnAdministrador.setEnabled(false);
+				rdbtnRecepcionista.setSelected(false);
+				rdbtnRecepcionista.setEnabled(false);
+			}
+			else {
+				rdbtnDoctor.setSelected(false);
+				rdbtnDoctor.setEnabled(false);
+				rdbtnAdministrador.setSelected(false);
+				rdbtnAdministrador.setEnabled(false);
+				rdbtnRecepcionista.setSelected(true);
+				rdbtnRecepcionista.setEnabled(false);
+			}
+		}
 		contentPanel.add(panelDoctor);
 		panelDoctor.setLayout(null);
 		
@@ -330,6 +388,9 @@ public class RegUsuario extends JDialog {
 		cbxEspecialidad.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		cbxEspecialidad.setModel(new DefaultComboBoxModel(new String[] {"<<Seleccione>>", "Alergolog\u00EDa", "Anestesiolog\u00EDa y reanimaci\u00F3n", "Aparato digestivo", "Cardiolog\u00EDa", "Endocrinolog\u00EDa y nutrici\u00F3n", "Geriatr\u00EDa", "Hematolog\u00EDa y hemoterapia", "Medicina de la educaci\u00F3n f\u00EDsica y del deporte", "Medicina espacial", "Medicina intensiva", "Medicina interna", "Medicina legal y forense", "Medicina preventiva y salud p\u00FAblica", "Medicina del trabajo", "Nefrolog\u00EDa", "Neumolog\u00EDa", "Neurolog\u00EDa", "Neurofisiolog\u00EDa Cl\u00EDnica", "Oncolog\u00EDa m\u00E9dica", "Oncolog\u00EDa radioter\u00E1pica", "Pediatr\u00EDa", "Psiquiatr\u00EDa", "Rehabilitaci\u00F3n", "Reumatolog\u00EDa", "Medicina familiar y comunitaria", "Cirug\u00EDa cardiovascular", "Cirug\u00EDa general y del aparato digestivo", "Cirug\u00EDa oral y maxilofacial", "Cirug\u00EDa ortop\u00E9dica y traumatolog\u00EDa", "Cirug\u00EDa pedi\u00E1trica", "Cirug\u00EDa pl\u00E1stica, est\u00E9tica y reparadora", "Cirug\u00EDa tor\u00E1cica", "Neurocirug\u00EDa", "Angiolog\u00EDa y cirug\u00EDa vascular", "Dermatolog\u00EDa m\u00E9dico-quir\u00FArgica y venereolog\u00EDa", "Obstetricia y ginecolog\u00EDa", "Oftalmolog\u00EDa", "Otorrinolaringolog\u00EDa", "Urolog\u00EDa"}));
 		cbxEspecialidad.setBounds(75, 10, 223, 23);
+		if(updated != null && updated instanceof Medico) {
+			cbxEspecialidad.setSelectedItem(((Medico) updated).getEspecialidad());
+		}
 		panelDoctor.add(cbxEspecialidad);
 		
 		JLabel lblNoHabitacion = new JLabel("No. Habitacion:");
@@ -347,6 +408,9 @@ public class RegUsuario extends JDialog {
 		});
 		spnHabitacion.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		spnHabitacion.setBounds(395, 10, 95, 23);
+		if(updated != null && updated instanceof Medico) {
+			spnHabitacion.setValue(((Medico) updated).getEspecialidad());
+		}
 		panelDoctor.add(spnHabitacion);
 		
 		lblAvisoEsp = new JLabel("");
@@ -360,30 +424,59 @@ public class RegUsuario extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("Registrar");
+				btnRegistrar = new JButton("");
+				if(updated == null){
+					btnRegistrar.setText("Registrar");
+				}else {
+					btnRegistrar.setText("Modificar");
+				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String password1 = new String(txtContrasena1.getPassword());
 						String password2 = new String(txtContrasena2.getPassword());
 						if(password1.equals(password2)) {
-							Usuario user = null;
-							if(rdbtnDoctor.isSelected()) {
-								user = new Medico(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), cbxEspecialidad.getSelectedItem().toString(), Integer.valueOf(spnHabitacion.getValue().toString()));
-								Clinica.getInstance().insertarDoctor(user);
+							if(updated == null) {
+								Usuario user = null;
+								if(rdbtnDoctor.isSelected()) {
+									user = new Medico(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), cbxEspecialidad.getSelectedItem().toString(), Integer.valueOf(spnHabitacion.getValue().toString()));
+									Clinica.getInstance().insertarDoctor(user);
+								}
+								if(rdbtnAdministrador.isSelected()) {
+									user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Administrador");
+									Clinica.getInstance().insertarUsuario(user);
+								}
+								if(rdbtnRecepcionista.isSelected()) {
+									user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
+									Clinica.getInstance().insertarUsuario(user);
+								}
+								setAlwaysOnTop(false);
+								JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+								setAlwaysOnTop(true);
+								btnRegistrar.setEnabled(false);
+								clean();
 							}
-							if(rdbtnAdministrador.isSelected()) {
-								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Administrador");
-								Clinica.getInstance().insertarUsuario(user);
+							else {
+								updated.setNombre(txtNombre.getText());
+								updated.setLogin(txtLogin.getText());
+								updated.setTelefono(txtTelefono.getText());
+								updated.setPassword(password1);
+								if(updated instanceof Medico) {
+									((Medico) updated).setEspecialidad(cbxEspecialidad.getSelectedItem().toString());
+									((Medico) updated).setNumHabitacion(Integer.valueOf(spnHabitacion.getValue().toString()));
+								}
+								else {
+									if(rdbtnAdministrador.isSelected()) {
+										((Administrador) updated).setPuestoLaboral("Administrador");
+									}
+									else {
+										((Administrador) updated).setPuestoLaboral("Recepecionista");
+									}
+										
+								}
+								Clinica.getInstance().modificarUsuario(updated);
+								JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+								dispose();
 							}
-							if(rdbtnRecepcionista.isSelected()) {
-								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
-								Clinica.getInstance().insertarUsuario(user);
-							}
-							setAlwaysOnTop(false);
-							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-							setAlwaysOnTop(true);
-							btnRegistrar.setEnabled(false);
-							clean();
 						}
 						else {
 							setAlwaysOnTop(false);

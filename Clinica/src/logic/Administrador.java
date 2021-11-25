@@ -2,6 +2,10 @@ package logic;
 
 public class Administrador extends Usuario {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String puestoLaboral;
 
 	public Administrador(String codigoUsuario, String login, String cedulaUsuario, String password, String nombre,

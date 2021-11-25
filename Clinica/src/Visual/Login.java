@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -23,6 +24,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
@@ -42,6 +49,38 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				FileInputStream clinica;
+				FileOutputStream clinica2;
+				ObjectInputStream clinicaRead;
+				ObjectOutputStream clinicaWrite;
+				try {
+					clinica = new FileInputStream ("clinica.dat");
+					clinicaRead = new ObjectInputStream(clinica);
+					Clinica temp = (Clinica)clinicaRead.readObject();
+					Clinica.setClinica(temp);
+					clinica.close();
+					clinicaRead.close();
+				} catch (FileNotFoundException e) {
+					try {
+						clinica2 = new  FileOutputStream("clinica.dat");
+						clinicaWrite = new ObjectOutputStream(clinica2);
+						Usuario aux = new Administrador("U-"+Clinica.getInstance().getGeneradorCodigoUserA(), "Admin", "402-3113000-2", "1234", "Ramon Del Villar", "809-546-8976", "Administrador");
+						Clinica.getInstance().insertarUsuario(aux);;
+						clinicaWrite.writeObject(Clinica.getInstance());
+						clinica2.close();
+						clinicaWrite.close();
+					} catch (FileNotFoundException e1) {
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+					}
+				} catch (IOException e) {
+					
+					
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				try {
 					Login frame = new Login();
 					frame.setVisible(true);
@@ -80,7 +119,6 @@ public class Login extends JFrame {
 		txtPassword = new JPasswordField();
 		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtPassword.setBounds((dim.width/4)-100, 187, 200, 23);
-		txtPassword.setText("1234");
 		contentPane.add(txtPassword);
 		
 		JLabel lblIniciarSesion = new JLabel("Iniciar Sesion: ");
@@ -99,32 +137,27 @@ public class Login extends JFrame {
 		txtUser = new JTextField();
 		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtUser.setBounds((dim.width/4)-100, 129, 200, 23);
-		txtUser.setText("Admin");
 		contentPane.add(txtUser);
 		txtUser.setColumns(10);
 		
 		lblContrasena = new JLabel("Contrasena:");
 		lblContrasena.setForeground(Color.WHITE);
 		lblContrasena.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblContrasena.setBounds((dim.width/4)-175, 187, 80, 23);
+		lblContrasena.setBounds((dim.width/4)-180, 187, 80, 23);
 		contentPane.add(lblContrasena);
 		
 		JButton btnNewButton = new JButton("Entrar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String password = new String(txtPassword.getPassword());
-				Usuario user = Clinica.getInstance().validarUser(txtUser.getText(), password);
-				if(txtUser.getText().equals("Admin") && password.equals("1234")) {
-					dispose();
-					PrincipalAdministrador admin = new PrincipalAdministrador();
-					admin.setVisible(true);
-				}
-				else if(user != null) {
-					if(user instanceof Administrador) {
+				boolean confirm = Clinica.getInstance().confirmLogin(txtUser.getText(), password);
+				if(confirm) {
+					if(Clinica.getLoginUser() instanceof Administrador) {
 						PrincipalAdministrador admin = new PrincipalAdministrador();
+						dispose();
 						admin.setVisible(true);
 					}
-					else if(user instanceof Medico) {
+					else if(Clinica.getLoginUser() instanceof Medico) {
 						//PrincipalDoctor doc = new PrincipalAdmin();
 						//doc.setVisible(true);
 					}

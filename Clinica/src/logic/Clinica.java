@@ -1,9 +1,14 @@
 package logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Clinica {
+public class Clinica implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Paciente> misPacientes;
 	private ArrayList<Vacuna> misVacunas;
 	private ArrayList<Usuario> misUsuarios;
@@ -14,6 +19,7 @@ public class Clinica {
 	private int generadorCodigoVacuna = 1;
 	private int generadorCodigoUserA = 1;
 	private int generadorCodigoDoctor = 1;
+	private static Usuario loginUser;
 	
 	private Clinica() {
 		super();
@@ -29,6 +35,11 @@ public class Clinica {
 			clinica = new Clinica();
 		return clinica;
 	}
+	
+	public static void setClinica(Clinica clinica) {
+		Clinica.clinica = clinica;
+	}
+
 	
 	public void insertarPaciente(Paciente p) {
 		misPacientes.add(p);
@@ -58,18 +69,15 @@ public class Clinica {
 		misCitas.add(c);
 	}
 	
-	public Usuario validarUser(String user, String password) {
-		boolean encontrado = false;
-		Usuario usuario = null;
-		int i = 0;
-		while(!encontrado && i < misUsuarios.size()) {
-			if(misUsuarios.get(i).getLogin().equals(user) && misUsuarios.get(i).getPassword().equals(password)) {
-				encontrado = true;
-				usuario = misUsuarios.get(i);
+	public boolean confirmLogin(String userLog, String password) {
+		boolean login = false;
+		for (Usuario user : misUsuarios) {
+			if(user.getLogin().equals(userLog) && user.getPassword().equals(password)){
+				setLoginUser(user);
+				login = true;
 			}
-			i++;
 		}
-		return usuario;
+		return login;
 	}
 	
 	public Paciente buscarPaciente(String cedula)
@@ -196,5 +204,30 @@ public class Clinica {
 
 	public int getGeneradorCodigoDoctor() {
 		return generadorCodigoDoctor;
+	}
+	
+	public void modificarUsuario(Usuario updated) {
+		Usuario user = buscarUsuario(updated.getCodigoUsuario());
+		if(user != null) {
+			user.setLogin(updated.getLogin());
+			user.setTelefono(updated.getTelefono());
+			user.setNombre(updated.getNombre());
+			user.setPassword(updated.getPassword());
+			if(updated instanceof Medico) {
+				((Medico) user).setNumHabitacion(((Medico) updated).getNumHabitacion());
+				((Medico) user).setEspecialidad(((Medico) updated).getEspecialidad());
+			}
+			else {
+				((Administrador) user).setPuestoLaboral(((Administrador) updated).getPuestoLaboral());
+			}
+		}
+	}
+
+	public static Usuario getLoginUser() {
+		return loginUser;
+	}
+
+	public static void setLoginUser(Usuario loginUser) {
+		Clinica.loginUser = loginUser;
 	}
 }

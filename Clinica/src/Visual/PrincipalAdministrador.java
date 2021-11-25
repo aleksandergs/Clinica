@@ -7,11 +7,20 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logic.Clinica;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import java.awt.Font;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 
 public class PrincipalAdministrador extends JFrame {
@@ -39,6 +48,24 @@ public class PrincipalAdministrador extends JFrame {
 	 * Create the frame.
 	 */
 	public PrincipalAdministrador() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				FileOutputStream clinica2;
+				ObjectOutputStream clinicaWrite;
+				try {
+					clinica2 = new	FileOutputStream("clinica.dat");
+					clinicaWrite = new ObjectOutputStream(clinica2);
+					clinicaWrite.writeObject(Clinica.getInstance());
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		dim = getToolkit().getScreenSize();
@@ -55,7 +82,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegUsuario regUser = new RegUsuario();
+				RegUsuario regUser = new RegUsuario(null);
 				regUser.setVisible(true);
 			}
 		});
@@ -114,19 +141,34 @@ public class PrincipalAdministrador extends JFrame {
 		mnNewMenu_4.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuBar.add(mnNewMenu_4);
 		
-		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Ver perfil");
+		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Ver/Editar perfil");
+		mntmNewMenuItem_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				RegUsuario modUser = new RegUsuario(Clinica.getLoginUser());
+				modUser.setVisible(true);
+			}
+		});
 		mntmNewMenuItem_7.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mnNewMenu_4.add(mntmNewMenuItem_7);
-		
-		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Editar Perfil");
-		mntmNewMenuItem_8.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		mnNewMenu_4.add(mntmNewMenuItem_8);
 		
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Salir");
 		mntmNewMenuItem_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				FileOutputStream clinica2;
+				ObjectOutputStream clinicaWrite;
+				try {
+					clinica2 = new  FileOutputStream("clinica.dat");
+					clinicaWrite = new ObjectOutputStream(clinica2);
+					clinicaWrite.writeObject(Clinica.getInstance());
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				Login login = new Login();
+				dispose();
 				login.setVisible(true);
 			}
 		});
