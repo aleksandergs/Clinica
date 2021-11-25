@@ -112,8 +112,9 @@ public class Login extends JFrame {
 		JButton btnNewButton = new JButton("Entrar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Usuario user = Clinica.getInstance().validarUser(txtUser.getText(), txtPassword.getText());
-				if(txtUser.getText().equals("Admin") && txtPassword.getText().equals("1234")) {
+				String password = new String(txtPassword.getPassword());
+				Usuario user = Clinica.getInstance().validarUser(txtUser.getText(), password);
+				if(txtUser.getText().equals("Admin") && password.equals("1234")) {
 					dispose();
 					PrincipalAdministrador admin = new PrincipalAdministrador();
 					admin.setVisible(true);

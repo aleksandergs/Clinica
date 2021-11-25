@@ -364,18 +364,20 @@ public class RegUsuario extends JDialog {
 				btnRegistrar = new JButton("Registrar");
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(txtContrasena1.getText().equals(txtContrasena2.getText())) {
+						String password1 = new String(txtContrasena1.getPassword());
+						String password2 = new String(txtContrasena2.getPassword());
+						if(password1.equals(password2)) {
 							Usuario user = null;
 							if(rdbtnDoctor.isSelected()) {
-								user = new Medico(txtID.getText(), txtLogin.getText(), txtCedula.getText(), txtContrasena1.getText(), txtNombre.getText(), txtTelefono.getText(), cbxEspecialidad.getSelectedItem().toString(), Integer.valueOf(spnHabitacion.getValue().toString()));
+								user = new Medico(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), cbxEspecialidad.getSelectedItem().toString(), Integer.valueOf(spnHabitacion.getValue().toString()));
 								Clinica.getInstance().insertarDoctor(user);
 							}
 							if(rdbtnAdministrador.isSelected()) {
-								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), txtContrasena1.getText(), txtNombre.getText(), txtTelefono.getText(), "Administrador");
+								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Administrador");
 								Clinica.getInstance().insertarUsuario(user);
 							}
 							if(rdbtnRecepcionista.isSelected()) {
-								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), txtContrasena1.getText(), txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
+								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
 								Clinica.getInstance().insertarUsuario(user);
 							}
 							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
