@@ -59,6 +59,7 @@ public class RegVacunas extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegVacunas() {
+		setAlwaysOnTop(true);
 		setTitle("Registro de Vacunas");
 		setModal(true);
 		setResizable(false);
@@ -211,6 +212,7 @@ public class RegVacunas extends JDialog {
 		}
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{

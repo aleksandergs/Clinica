@@ -78,9 +78,10 @@ public class RegUsuario extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegUsuario() {
+		setAlwaysOnTop(true);
 		setResizable(false);
 		setModal(true);
-		setBounds(100, 100, 550, 450);
+		setBounds(100, 100, 550, 434);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -356,6 +357,7 @@ public class RegUsuario extends JDialog {
 		panelDoctor.add(lblAvisoEsp);
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
@@ -393,6 +395,11 @@ public class RegUsuario extends JDialog {
 			}
 			{
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);

@@ -57,6 +57,7 @@ public class RegEnfermedades extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegEnfermedades() {
+		setAlwaysOnTop(true);
 		setTitle("Registro Enfermedad\r\n");
 		setModal(true);
 		setResizable(false);
@@ -156,6 +157,7 @@ public class RegEnfermedades extends JDialog {
 		}
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
