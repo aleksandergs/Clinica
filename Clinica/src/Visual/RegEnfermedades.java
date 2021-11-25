@@ -115,9 +115,8 @@ public class RegEnfermedades extends JDialog {
 			}
 			{
 				cbxTipo = new JComboBox();
-				cbxTipo.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
+				cbxTipo.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
 						validarCamposVacios();
 						habilitarBoton();
 					}
@@ -139,6 +138,7 @@ public class RegEnfermedades extends JDialog {
 			panel.add(scrollPane);
 			
 			txtDiagnostico = new JTextArea();
+			txtDiagnostico.setLineWrap(true);
 			scrollPane.setViewportView(txtDiagnostico);
 			{
 				lblAvisoNombre = new JLabel("");

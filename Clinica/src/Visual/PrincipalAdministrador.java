@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -90,6 +91,13 @@ public class PrincipalAdministrador extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Listado");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListUsuarios dialog = new ListUsuarios();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		mntmNewMenuItem_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
@@ -126,6 +134,13 @@ public class PrincipalAdministrador extends JFrame {
 		mnNewMenu_2.add(mntmNewMenuItem_4);
 		
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Listado");
+		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListEnfermedades dialog = new ListEnfermedades();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		mntmNewMenuItem_5.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mnNewMenu_2.add(mntmNewMenuItem_5);
 		
