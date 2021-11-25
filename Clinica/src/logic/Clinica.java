@@ -24,22 +24,6 @@ public class Clinica {
 		misCitas = new ArrayList<>();
 	}
 	
-	public int getGeneradorCodigoEnfermedad() {
-		return generadorCodigoEnfermedad;
-	}
-
-	public int getGeneradorCodigoVacuna() {
-		return generadorCodigoVacuna;
-	}
-
-	public int getGeneradorCodigoUserA() {
-		return generadorCodigoUserA;
-	}
-
-	public int getGeneradorCodigoDoctor() {
-		return generadorCodigoDoctor;
-	}
-	
 	public static Clinica getInstance() {
 		if(clinica == null)
 			clinica = new Clinica();
@@ -161,5 +145,56 @@ public class Clinica {
 			i++;
 		}
 		return vacuna;
+	}
+	
+	public int[] cantUsersType()
+	{
+		int[] cant = {0,0};
+		
+		for(Usuario user : misUsuarios)
+		{
+			if(user instanceof Administrador)
+				cant[0]++;
+			if(user instanceof Medico)
+				cant[1]++;
+		}
+		
+		return cant;
+	}
+
+	public ArrayList<Paciente> getMisPacientes() {
+		return misPacientes;
+	}
+
+	public ArrayList<Vacuna> getMisVacunas() {
+		return misVacunas;
+	}
+
+	public ArrayList<Usuario> getMisUsuarios() {
+		return misUsuarios;
+	}
+
+	public ArrayList<Enfermedad> getMisEnfermedades() {
+		return misEnfermedades;
+	}
+
+	public ArrayList<CitaMedica> getMisCitas() {
+		return misCitas;
+	}
+	
+	public int getGeneradorCodigoEnfermedad() {
+		return generadorCodigoEnfermedad;
+	}
+
+	public int getGeneradorCodigoVacuna() {
+		return generadorCodigoVacuna;
+	}
+
+	public int getGeneradorCodigoUserA() {
+		return generadorCodigoUserA;
+	}
+
+	public int getGeneradorCodigoDoctor() {
+		return generadorCodigoDoctor;
 	}
 }
