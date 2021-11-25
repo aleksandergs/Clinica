@@ -380,12 +380,16 @@ public class RegUsuario extends JDialog {
 								user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
 								Clinica.getInstance().insertarUsuario(user);
 							}
+							setAlwaysOnTop(false);
 							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							setAlwaysOnTop(true);
 							btnRegistrar.setEnabled(false);
 							clean();
 						}
 						else {
+							setAlwaysOnTop(false);
 							JOptionPane.showMessageDialog(null, "Las Contraseñas no coinciden", "Error", JOptionPane.ERROR_MESSAGE);
+							setAlwaysOnTop(true);
 						}
 					}
 				});

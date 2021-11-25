@@ -168,7 +168,9 @@ public class RegEnfermedades extends JDialog {
 						Enfermedad disease = null;
 						disease = new Enfermedad(txtId.getText(), txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtDiagnostico.getText());
 						Clinica.getInstance().insertarEnfermedad(disease);
+						setAlwaysOnTop(false);
 						JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+						setAlwaysOnTop(true);
 						btnRegistrar.setEnabled(false);
 						clean();
 					}

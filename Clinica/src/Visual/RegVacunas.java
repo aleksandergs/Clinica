@@ -222,7 +222,9 @@ public class RegVacunas extends JDialog {
 						Vacuna vaccine = null;
 						vaccine = new Vacuna(txtId.getText(), txtNombre.getText(), txtContra.getText(), Integer.valueOf(spnDosis.getValue().toString()), txtFabricante.getText(), txtEfectos.getText());
 						Clinica.getInstance().insertarVacuna(vaccine);
+						setAlwaysOnTop(false);
 						JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+						setAlwaysOnTop(true);
 						btnRegistrar.setEnabled(false);
 						clean();
 					}
