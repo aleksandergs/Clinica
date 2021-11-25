@@ -321,9 +321,8 @@ public class RegUsuario extends JDialog {
 		panelDoctor.add(lblEspecialidad);
 		
 		cbxEspecialidad = new JComboBox();
-		cbxEspecialidad.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		cbxEspecialidad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				validarCamposVacios();
 				habilitarBoton();
 			}
@@ -430,7 +429,7 @@ public class RegUsuario extends JDialog {
 	}
 	
 	private void habilitarBoton() {
-		if(!txtCedula.isEditValid() || txtContrasena1.getPassword().length == 0 || txtContrasena2.getPassword().length == 0 || txtLogin.getText().isEmpty() || txtNombre.getText().isEmpty() || !txtTelefono.isEditValid() || rdbtnDoctor.isSelected() && cbxEspecialidad.getSelectedIndex() == 0){
+		if(!txtCedula.isEditValid() || txtContrasena1.getPassword().length == 0 || txtContrasena2.getPassword().length == 0 || txtLogin.getText().isEmpty() || txtNombre.getText().isEmpty() || !txtTelefono.isEditValid() || (rdbtnDoctor.isSelected() && (cbxEspecialidad.getSelectedIndex() == 0))){
 			btnRegistrar.setEnabled(false);
 		}
 		else {
@@ -475,7 +474,7 @@ public class RegUsuario extends JDialog {
 			lblAvisoClave2.setText("");
 		}
 		
-		if(rdbtnDoctor.isSelected() && cbxEspecialidad.getSelectedIndex() == 0) {
+		if(rdbtnDoctor.isSelected() && (cbxEspecialidad.getSelectedIndex() == 0)) {
 			lblAvisoEsp.setText("*");
 		} else {
 			lblAvisoEsp.setText("");
