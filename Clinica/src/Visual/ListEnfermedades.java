@@ -61,6 +61,7 @@ public class ListEnfermedades extends JDialog {
 		setModal(true);
 		setAlwaysOnTop(true);
 		setBounds(100, 100, 700, 618);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

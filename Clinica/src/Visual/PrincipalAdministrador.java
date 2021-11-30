@@ -116,6 +116,13 @@ public class PrincipalAdministrador extends JFrame {
 		mnNewMenu_1.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Listado");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListVacunas dialog = new ListVacunas();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		mntmNewMenuItem_3.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		mnNewMenu_1.add(mntmNewMenuItem_3);
 		

@@ -180,6 +180,7 @@ public class RegVacunas extends JDialog {
 			panel.add(scrollPane);
 			
 			txtEfectos = new JTextArea();
+			txtEfectos.setLineWrap(true);
 			txtEfectos.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
