@@ -20,6 +20,8 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextArea;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ListVacunas extends JDialog {
 
@@ -106,12 +108,18 @@ public class ListVacunas extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnModificar = new JButton("Modificar");
+				btnModificar.setEnabled(false);
 				btnModificar.setActionCommand("OK");
 				buttonPane.add(btnModificar);
 				getRootPane().setDefaultButton(btnModificar);
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
