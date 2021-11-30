@@ -30,8 +30,10 @@ public class ListUsuarios extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JButton btnCancelar;
-	private String[][] tableData = {};
-	private String[][] tableData1 = {};
+	private DefaultTableModel modelTable;
+	private DefaultTableModel modelTable1;
+	private Object[] rowsTable;
+	private Object[] rowsTable1;
 	private JPanel panel;
 	private JPanel panel1;
 	private JScrollPane scrollPane;
@@ -39,6 +41,7 @@ public class ListUsuarios extends JDialog {
 	private JTable table;
 	private JTable table1;
 	private Usuario selected = null;
+	private JButton btnModificar;
 
 	/**
 	 * Launch the application.
@@ -69,7 +72,6 @@ public class ListUsuarios extends JDialog {
 		contentPanel.setLayout(null);
 		String[] columnAdmin = { "Codigo", "Cedula", "Nombre", "Usuario", "Telefono", "Puesto" };
 		String[] columnMedi = { "Codigo", "Cedula", "Nombre", "Usuario", "Telefono", "Especialidad", "# Consultorio" };
-		llenarTabla();
 		{
 			panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "Administradores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -87,13 +89,20 @@ public class ListUsuarios extends JDialog {
 				public void mouseClicked(MouseEvent e) {
 					int aux = table.getSelectedRow();
 					if(aux != -1) {
+						table1.getSelectionModel().clearSelection();
+						btnModificar.setEnabled(true);
 						String codigo = (String) table.getValueAt(aux, 0);
 						selected = Clinica.getInstance().buscarUsuario(codigo);
+					}
+					else {
+						btnModificar.setEnabled(false);
 					}
 				}
 			});
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.setModel(new DefaultTableModel(tableData, columnAdmin));
+			modelTable = new DefaultTableModel();
+			modelTable.setColumnIdentifiers(columnAdmin);
+			table.setModel(modelTable);
 			scrollPane.setViewportView(table);
 		}
 		{
@@ -112,15 +121,22 @@ public class ListUsuarios extends JDialog {
 			table1.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					int aux = table.getSelectedRow();
+					int aux = table1.getSelectedRow();
 					if(aux != -1) {
-						String codigo = (String) table.getValueAt(aux, 0);
+						table.getSelectionModel().clearSelection();
+						btnModificar.setEnabled(true);
+						String codigo = (String) table1.getValueAt(aux, 0);
 						selected = Clinica.getInstance().buscarUsuario(codigo);
+					}
+					else {
+						btnModificar.setEnabled(false);
 					}
 				}
 			});
 			table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table1.setModel(new DefaultTableModel(tableData1, columnMedi));
+			modelTable1 = new DefaultTableModel();
+			modelTable1.setColumnIdentifiers(columnMedi);
+			table1.setModel(modelTable1);
 			scrollPane_1.setViewportView(table1);
 		}
 		{
@@ -129,7 +145,19 @@ public class ListUsuarios extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnModificar = new JButton("Modificar");
+				btnModificar = new JButton("Modificar");
+				btnModificar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(selected != null) {
+							RegUsuario modUsuario = new RegUsuario(selected);
+							setAlwaysOnTop(false);
+							modUsuario.setVisible(true);
+							setAlwaysOnTop(true);
+							llenarTabla();
+							btnModificar.setEnabled(false);
+						}
+					}
+				});
 				btnModificar.setEnabled(false);
 				btnModificar.setActionCommand("OK");
 				buttonPane.add(btnModificar);
@@ -146,35 +174,37 @@ public class ListUsuarios extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		llenarTabla();
 	}
 	
 	private void llenarTabla()
 	{
 		int[] cantTipos = Clinica.getInstance().cantUsersType();
-		tableData = new String[cantTipos[0]][6];
-		tableData1 = new String[cantTipos[1]][7];
-		int admins = 0, users = 0;
+		modelTable.setRowCount(0);
+		modelTable1.setRowCount(0);
+		rowsTable = new Object[modelTable.getColumnCount()];
+		rowsTable1 = new Object[modelTable1.getColumnCount()];
 		//{ "Codigo", "Cedula", "Nombre", "Usuario", "Telefono", "Puesto" }
 		for (Usuario u : Clinica.getInstance().getMisUsuarios()) 
 		{
 			if(u instanceof Administrador) {
-				tableData[admins][0] = u.getCodigoUsuario(); 
-				tableData[admins][1] = u.getCedulaUsuario();	
-				tableData[admins][2] = u.getNombre();
-				tableData[admins][3] = u.getLogin(); 
-				tableData[admins][4] = u.getTelefono(); 
-				tableData[admins][5] = ((Administrador) u).getPuestoLaboral();
-				admins++;
+				rowsTable[0] = u.getCodigoUsuario(); 
+				rowsTable[1] = u.getCedulaUsuario();	
+				rowsTable[2] = u.getNombre();
+				rowsTable[3] = u.getLogin(); 
+				rowsTable[4] = u.getTelefono(); 
+				rowsTable[5] = ((Administrador) u).getPuestoLaboral();
+				modelTable.addRow(rowsTable);
 			}
 			else if (u instanceof Medico) {
-				tableData1[users][0] = u.getCodigoUsuario(); 
-				tableData1[users][1] = u.getCedulaUsuario();	
-				tableData1[users][2] = u.getNombre();
-				tableData1[users][3] = u.getLogin(); 
-				tableData1[users][4] = u.getTelefono();
-				tableData1[users][5] = ((Medico) u).getEspecialidad();
-				tableData1[users][6] = Integer.toString(((Medico) u).getNumHabitacion());
-				users++;
+				rowsTable1[0] = u.getCodigoUsuario(); 
+				rowsTable1[1] = u.getCedulaUsuario();	
+				rowsTable1[2] = u.getNombre();
+				rowsTable1[3] = u.getLogin(); 
+				rowsTable1[4] = u.getTelefono();
+				rowsTable1[5] = ((Medico) u).getEspecialidad();
+				rowsTable1[6] = Integer.toString(((Medico) u).getNumHabitacion());
+				modelTable1.addRow(rowsTable1);
 			}
 		}
 	}

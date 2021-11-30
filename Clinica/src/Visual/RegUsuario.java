@@ -379,8 +379,8 @@ public class RegUsuario extends JDialog {
 		panelDoctor.add(lblEspecialidad);
 		
 		cbxEspecialidad = new JComboBox();
-		cbxEspecialidad.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		cbxEspecialidad.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
 				validarCamposVacios();
 				habilitarBoton();
 			}
@@ -409,7 +409,8 @@ public class RegUsuario extends JDialog {
 		spnHabitacion.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		spnHabitacion.setBounds(395, 10, 95, 23);
 		if(updated != null && updated instanceof Medico) {
-			spnHabitacion.setValue(((Medico) updated).getEspecialidad());
+			Integer consultorio = Integer.valueOf(((Medico) updated).getNumHabitacion());
+			spnHabitacion.setValue(consultorio);
 		}
 		panelDoctor.add(spnHabitacion);
 		
@@ -434,7 +435,8 @@ public class RegUsuario extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String password1 = new String(txtContrasena1.getPassword());
 						String password2 = new String(txtContrasena2.getPassword());
-						if(password1.equals(password2)) {
+						boolean loginUser = Clinica.getInstance().buscarLoginExiste(txtLogin.getText(), updated);
+						if(password1.equals(password2) && !loginUser) {
 							if(updated == null) {
 								Usuario user = null;
 								if(rdbtnDoctor.isSelected()) {
@@ -474,9 +476,16 @@ public class RegUsuario extends JDialog {
 										
 								}
 								Clinica.getInstance().modificarUsuario(updated);
+								setAlwaysOnTop(false);
 								JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+								setAlwaysOnTop(true);
 								dispose();
 							}
+						}
+						else if(loginUser) {
+							setAlwaysOnTop(false);
+							JOptionPane.showMessageDialog(null, "Este Usuario ya Existe", "Error", JOptionPane.ERROR_MESSAGE);
+							setAlwaysOnTop(true);
 						}
 						else {
 							setAlwaysOnTop(false);

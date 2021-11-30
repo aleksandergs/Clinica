@@ -2,6 +2,7 @@ package logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Clinica implements Serializable{
 
@@ -19,6 +20,7 @@ public class Clinica implements Serializable{
 	private int generadorCodigoVacuna = 1;
 	private int generadorCodigoUserA = 1;
 	private int generadorCodigoDoctor = 1;
+	private int generadorCodigoCitaMedica = 1;
 	private static Usuario loginUser;
 	
 	private Clinica() {
@@ -67,6 +69,7 @@ public class Clinica implements Serializable{
 	
 	public void insertarCita(CitaMedica c) {
 		misCitas.add(c);
+		generadorCodigoCitaMedica++;
 	}
 	
 	public boolean confirmLogin(String userLog, String password) {
@@ -206,6 +209,10 @@ public class Clinica implements Serializable{
 		return generadorCodigoDoctor;
 	}
 	
+	public int getGeneradorCodigoCitaMedica() {
+		return generadorCodigoCitaMedica;
+	}
+	
 	public void modificarUsuario(Usuario updated) {
 		Usuario user = buscarUsuario(updated.getCodigoUsuario());
 		if(user != null) {
@@ -222,6 +229,16 @@ public class Clinica implements Serializable{
 			}
 		}
 	}
+	
+	public void modificarCitaMedica(CitaMedica updated) {
+		CitaMedica cita = buscarCita(updated.getCodigo());
+		if(cita != null) {
+			cita.setFecha(updated.getFecha());
+			cita.setMedico(updated.getMedico());
+			cita.setNombrePersona(updated.getNombrePersona());
+			cita.setNumeroPersona(updated.getNumeroPersona());
+		}
+	}
 
 	public static Usuario getLoginUser() {
 		return loginUser;
@@ -229,5 +246,39 @@ public class Clinica implements Serializable{
 
 	public static void setLoginUser(Usuario loginUser) {
 		Clinica.loginUser = loginUser;
+	}
+	
+	public boolean buscarLoginExiste(String login, Usuario user) {
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < misUsuarios.size()) {
+			if(user != null) {
+				if(login.equals(user.getLogin())) {
+					return false;
+				}
+			}
+			if (misUsuarios.get(i).getLogin().equals(login)) {
+				encontrado = true;
+			}
+			i++;
+		}
+		return encontrado;
+	}
+	
+	public boolean buscarCitaMedicaExiste(Date fecha, CitaMedica cita, String doc) {
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < misCitas.size()) {
+			if(cita != null) {
+				if(cita.getFecha().compareTo(fecha) == 0 && cita.getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
+					return false;
+				}
+			}
+			if (misCitas.get(i).getFecha().compareTo(fecha) == 0 && misCitas.get(i).getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
+				encontrado = true;
+			}
+			i++;
+		}
+		return encontrado;
 	}
 }
