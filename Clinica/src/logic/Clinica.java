@@ -332,4 +332,15 @@ public class Clinica implements Serializable{
 			disease.setDiagnostico(updated.getDiagnostico());
 		}
 	}
+	
+	ArrayList<CitaMedica> CitasByMedico(Medico medico)
+	{
+		ArrayList<CitaMedica> citas = new ArrayList<>();
+		for(CitaMedica citaMedica : misCitas)
+		{
+			if(citaMedica.getMedico().getCodigoUsuario() == medico.getCodigoUsuario())
+				citas.add(citaMedica);
+		}
+		return citas;
+	}
 }
