@@ -26,26 +26,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class RegEnfermedades extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtId;
-	private JTextField txtNombre;
-	private JTextArea txtDiagnostico;
-	private JLabel lblAvisoNombre;
-	private JLabel lblAvisoTipo;
-	private JComboBox cbxTipo;
-	private JButton btnRegistrar;
+	private JTextField txtId = new JTextField();
+	private JTextField txtNombre = new JTextField();
+	private JTextArea txtDiagnostico = new JTextArea();
+	private JLabel lblAvisoNombre = new JLabel();
+	private JLabel lblAvisoTipo = new JLabel();
+	private JComboBox cbxTipo = new JComboBox<>();
+	private JButton btnRegistrar = new JButton();
+	private Enfermedad updated = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegEnfermedades dialog = new RegEnfermedades();
+			RegEnfermedades dialog = new RegEnfermedades(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -56,12 +55,17 @@ public class RegEnfermedades extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegEnfermedades() {
+	public RegEnfermedades(Enfermedad enfermedad) {
+		updated = enfermedad;
 		setAlwaysOnTop(true);
-		setTitle("Registro Enfermedad\r\n");
 		setModal(true);
 		setResizable(false);
 		setBounds(100, 100, 480, 309);
+		if(updated == null){
+			setTitle("Registrar Enfermedad");
+		}else {
+			setTitle("Modificar Enfermedad");
+		}
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -79,12 +83,16 @@ public class RegEnfermedades extends JDialog {
 				panel.add(label);
 			}
 			{
-				txtId = new JTextField();
 				txtId.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtId.setEditable(false);
 				txtId.setColumns(10);
 				txtId.setBounds(85, 30, 178, 23);
-				txtId.setText("E-"+Clinica.getInstance().getGeneradorCodigoEnfermedad());
+				if(updated != null) {
+					txtId.setText(updated.getCodigo());
+				}
+				else {
+					txtId.setText("E-"+Clinica.getInstance().getGeneradorCodigoEnfermedad());
+				}
 				panel.add(txtId);
 			}
 			{
@@ -94,7 +102,6 @@ public class RegEnfermedades extends JDialog {
 				panel.add(label);
 			}
 			{
-				txtNombre = new JTextField();
 				txtNombre.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
@@ -105,6 +112,9 @@ public class RegEnfermedades extends JDialog {
 				txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtNombre.setColumns(10);
 				txtNombre.setBounds(85, 60, 357, 23);
+				if(updated != null) {
+					txtNombre.setText(updated.getNombre());
+				}
 				panel.add(txtNombre);
 			}
 			{
@@ -114,7 +124,6 @@ public class RegEnfermedades extends JDialog {
 				panel.add(lblTipo);
 			}
 			{
-				cbxTipo = new JComboBox();
 				cbxTipo.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						validarCamposVacios();
@@ -124,6 +133,9 @@ public class RegEnfermedades extends JDialog {
 				cbxTipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Enfermedad oncol\u00F3gica", "Enfermedad infecciosa y parasitaria", "Enfermedad de la sangre", "Enfermedad del sistema inmunitario", "Enfermedad endocrina", "Trastorno mental, del comportamiento y del desarrollo", "Enfermedad del sistema nervioso", "Enfermedad oftalmol\u00F3gica y de la visi\u00F3n", "Enfermedad auditiva", "Enfermedad cardiovascular", "Enfermedad respiratoria", "Enfermedad del sistema digestivo", "Enfermedad de la piel", "Enfermedad del aparato genitourinario", "Enfermedad cong\u00E9nita y alteracion cromos\u00F3mica"}));
 				cbxTipo.setBounds(85, 90, 357, 23);
+				if(updated != null) {
+					cbxTipo.setSelectedItem(updated.getTipo());
+				}
 				panel.add(cbxTipo);
 			}
 			{
@@ -136,19 +148,26 @@ public class RegEnfermedades extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setBounds(85, 126, 357, 70);
 			panel.add(scrollPane);
+			txtDiagnostico.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+					habilitarBoton();
+					validarCamposVacios();
+				}
+			});
 			
-			txtDiagnostico = new JTextArea();
 			txtDiagnostico.setLineWrap(true);
 			scrollPane.setViewportView(txtDiagnostico);
+			if(updated != null) {
+				txtDiagnostico.setText(updated.getDiagnostico());
+			}
 			{
-				lblAvisoNombre = new JLabel("");
 				lblAvisoNombre.setForeground(Color.RED);
 				lblAvisoNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 				lblAvisoNombre.setBounds(446, 60, 18, 14);
 				panel.add(lblAvisoNombre);
 			}
 			{
-				lblAvisoTipo = new JLabel("");
 				lblAvisoTipo.setForeground(Color.RED);
 				lblAvisoTipo.setFont(new Font("Tahoma", Font.PLAIN, 11));
 				lblAvisoTipo.setBounds(446, 90, 18, 14);
@@ -161,18 +180,36 @@ public class RegEnfermedades extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("Registrar");
+				if(updated == null){
+					btnRegistrar.setText("Registrar");
+				}else {
+					btnRegistrar.setText("Modificar");
+				}
 				btnRegistrar.setEnabled(false);
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						Enfermedad disease = null;
-						disease = new Enfermedad(txtId.getText(), txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtDiagnostico.getText());
-						Clinica.getInstance().insertarEnfermedad(disease);
-						setAlwaysOnTop(false);
-						JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						setAlwaysOnTop(true);
-						btnRegistrar.setEnabled(false);
-						clean();
+						if(updated == null) {
+							Enfermedad disease = null;
+							disease = new Enfermedad(txtId.getText(), txtNombre.getText(), cbxTipo.getSelectedItem().toString(), txtDiagnostico.getText());
+							Clinica.getInstance().insertarEnfermedad(disease);
+							setAlwaysOnTop(false);
+							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							setAlwaysOnTop(true);
+							btnRegistrar.setEnabled(false);
+							clean();
+							habilitarBoton();
+							validarCamposVacios();
+						}
+						else {
+							updated.setNombre(txtNombre.getText());
+							updated.setTipo(cbxTipo.getSelectedItem().toString());
+							updated.setDiagnostico(txtDiagnostico.getText());
+							Clinica.getInstance().modificarEnfermedad(updated);
+							setAlwaysOnTop(false);
+							JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							setAlwaysOnTop(true);
+							dispose();
+						}
 					}
 				});
 				btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 11));

@@ -4,23 +4,13 @@ import java.util.ArrayList;
 
 public class HistorialClinico {
 	
-	private String codigoHistoria;
 	private ArrayList<Consulta> misConsultas;
 	private ArrayList<Vacuna> misVacunas;
 	
-	public HistorialClinico(String codigoHistoria, ArrayList<Consulta> misConsultas, ArrayList<Vacuna> misVacunas) {
+	public HistorialClinico() {
 		super();
-		this.codigoHistoria = codigoHistoria;
-		this.misConsultas = misConsultas;
-		this.misVacunas = misVacunas;
-	}
-
-	public String getCodigoHistoria() {
-		return codigoHistoria;
-	}
-
-	public void setCodigoHistoria(String codigoHistoria) {
-		this.codigoHistoria = codigoHistoria;
+		this.misConsultas = new ArrayList<Consulta>();
+		this.misVacunas = new ArrayList<Vacuna>();
 	}
 
 	public ArrayList<Consulta> getMisConsultas() {

@@ -21,6 +21,7 @@ public class Clinica implements Serializable{
 	private int generadorCodigoUserA = 1;
 	private int generadorCodigoDoctor = 1;
 	private int generadorCodigoCitaMedica = 1;
+	private int generadorCodigoConsulta = 1;
 	private static Usuario loginUser;
 	
 	private Clinica() {
@@ -160,14 +161,16 @@ public class Clinica implements Serializable{
 	
 	public int[] cantUsersType()
 	{
-		int[] cant = {0,0};
+		int[] cant = {0,0,0};
 		
 		for(Usuario user : misUsuarios)
 		{
-			if(user instanceof Administrador)
+			if(user instanceof Administrador && ((Administrador) user).getPuestoLaboral().equalsIgnoreCase("Administrador"))
 				cant[0]++;
-			if(user instanceof Medico)
+			if(user instanceof Administrador && ((Administrador) user).getPuestoLaboral().equalsIgnoreCase("Secretario"))
 				cant[1]++;
+			if(user instanceof Medico)
+				cant[2]++;
 		}
 		
 		return cant;
@@ -211,6 +214,10 @@ public class Clinica implements Serializable{
 	
 	public int getGeneradorCodigoCitaMedica() {
 		return generadorCodigoCitaMedica;
+	}
+	
+	public int getGeneradorCodigoConsulta() {
+		return generadorCodigoConsulta;
 	}
 	
 	public void modificarUsuario(Usuario updated) {
@@ -280,5 +287,50 @@ public class Clinica implements Serializable{
 			i++;
 		}
 		return encontrado;
+	}
+	
+	public Paciente buscarPacienteByCodConsulta(String codConsulta) {
+		Paciente paci = null;
+		int i = 0, j = 0;
+		boolean encontradoConsulta = false;
+		boolean encontradoPaci = false;
+		while (!encontradoPaci && i < misPacientes.size()) {
+			while (!encontradoConsulta && j < misPacientes.get(i).getMisConsultas().size())
+			if (misPacientes.get(i).getMisConsultas().get(j).getCodConsulta().equalsIgnoreCase(codConsulta)) {
+				encontradoPaci = true;
+				encontradoConsulta = true;
+				paci = misPacientes.get(i);
+			}
+			i++;
+			j++;
+		}
+		return paci;
+	}
+	
+	public void insertarConsulta(Consulta aux, Paciente paci) {
+		if(paci != null) {
+			paci.getMisConsultas().add(aux);
+			generadorCodigoConsulta++;
+		}
+	}
+	
+	public void modificarConsulta(Consulta updated) {
+		Paciente paci = buscarPacienteByCodConsulta(updated.getCodConsulta());
+		Consulta consulta = paci.buscarConsulta(updated.getCodConsulta());
+		if(consulta != null) {
+			consulta.setDiagnostico(updated.getDiagnostico());
+			consulta.setEnfermedad(updated.getEnfermedad());
+			consulta.setFechaConsulta(updated.getFechaConsulta());
+			consulta.setSintomas(updated.getSintomas());
+		}
+	}
+	
+	public void modificarEnfermedad(Enfermedad updated) {
+		Enfermedad disease = buscarEnfermedad(updated.getCodigo());
+		if(disease != null) {
+			disease.setNombre(updated.getNombre());
+			disease.setTipo(updated.getTipo());
+			disease.setDiagnostico(updated.getDiagnostico());
+		}
 	}
 }

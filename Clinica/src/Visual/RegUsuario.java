@@ -27,39 +27,38 @@ import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import java.awt.event.ActionListener;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class RegUsuario extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField txtID;
-	private JTextField txtNombre;
-	private JTextField txtLogin;
-	private JPasswordField txtContrasena1;
-	private JPasswordField txtContrasena2;
-	private JRadioButton rdbtnDoctor;
-	private JRadioButton rdbtnAdministrador;
-	private JRadioButton rdbtnRecepcionista;
-	private JPanel panelDoctor;
-	private JComboBox cbxEspecialidad;
-	private JSpinner spnHabitacion;
+	private JTextField txtID = new JTextField();
+	private JTextField txtNombre = new JTextField();
+	private JTextField txtLogin = new JTextField();
+	private JPasswordField txtContrasena1 = new JPasswordField();
+	private JPasswordField txtContrasena2 = new JPasswordField();
+	private JRadioButton rdbtnDoctor = new JRadioButton("Doctor");
+	private JRadioButton rdbtnAdministrador = new JRadioButton("Administrador");
+	private JRadioButton rdbtnSecretario = new JRadioButton("Secretario");
+	private JPanel panelDoctor = new JPanel();
+	private JComboBox cbxEspecialidad = new JComboBox<>();
+	private JSpinner spnHabitacion = new JSpinner();
 	private JFormattedTextField txtCedula;
 	private JFormattedTextField txtTelefono;
-	private JButton btnRegistrar;
-	private JLabel lblAvisoNombre;
-	private JLabel lblAvisoCedula;
-	private JLabel lblAvisoClave1;
-	private JLabel lblAvisoLogin;
-	private JLabel lblAvisoTelefono;
-	private JLabel lblAvisoEsp;
-	private JLabel lblAvisoClave2;
+	private JButton btnRegistrar = new JButton("");
+	private JLabel lblAvisoNombre = new JLabel("");
+	private JLabel lblAvisoCedula = new JLabel("");
+	private JLabel lblAvisoClave1 = new JLabel("");
+	private JLabel lblAvisoLogin = new JLabel("");
+	private JLabel lblAvisoTelefono = new JLabel("");
+	private JLabel lblAvisoEsp = new JLabel("");
+	private JLabel lblAvisoClave2 = new JLabel("");
 	private Usuario updated = null;
 
 	/**
@@ -106,7 +105,6 @@ public class RegUsuario extends JDialog {
 		lblCodigoid.setBounds(10, 34, 57, 23);
 		panel.add(lblCodigoid);
 		
-		txtID = new JTextField();
 		txtID.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtID.setEditable(false);
 		txtID.setColumns(10);
@@ -123,8 +121,7 @@ public class RegUsuario extends JDialog {
 		lblNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblNombre.setBounds(10, 64, 48, 23);
 		panel.add(lblNombre);
-		
-		txtNombre = new JTextField();
+
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -172,7 +169,6 @@ public class RegUsuario extends JDialog {
 		lblLogin.setBounds(10, 124, 48, 23);
 		panel.add(lblLogin);
 		
-		txtLogin = new JTextField();
 		txtLogin.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -224,8 +220,7 @@ public class RegUsuario extends JDialog {
 		lblConfirmar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblConfirmar.setBounds(265, 154, 66, 23);
 		panel.add(lblConfirmar);
-		
-		txtContrasena1 = new JPasswordField();
+
 		txtContrasena1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -238,8 +233,7 @@ public class RegUsuario extends JDialog {
 			txtContrasena1.setText(updated.getPassword());
 		}
 		panel.add(txtContrasena1);
-		
-		txtContrasena2 = new JPasswordField();
+
 		txtContrasena2.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -253,37 +247,31 @@ public class RegUsuario extends JDialog {
 		}
 		panel.add(txtContrasena2);
 		
-		lblAvisoNombre = new JLabel("");
 		lblAvisoNombre.setForeground(Color.RED);
 		lblAvisoNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoNombre.setBounds(494, 64, 18, 14);
 		panel.add(lblAvisoNombre);
 		
-		lblAvisoCedula = new JLabel("");
 		lblAvisoCedula.setForeground(Color.RED);
 		lblAvisoCedula.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoCedula.setBounds(252, 94, 18, 14);
 		panel.add(lblAvisoCedula);
 		
-		lblAvisoTelefono = new JLabel("");
 		lblAvisoTelefono.setForeground(Color.RED);
 		lblAvisoTelefono.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoTelefono.setBounds(494, 94, 18, 14);
 		panel.add(lblAvisoTelefono);
 		
-		lblAvisoLogin = new JLabel("");
 		lblAvisoLogin.setForeground(Color.RED);
 		lblAvisoLogin.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoLogin.setBounds(252, 124, 18, 14);
 		panel.add(lblAvisoLogin);
 		
-		lblAvisoClave1 = new JLabel("");
 		lblAvisoClave1.setForeground(Color.RED);
 		lblAvisoClave1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoClave1.setBounds(252, 154, 18, 14);
 		panel.add(lblAvisoClave1);
 		
-		lblAvisoClave2 = new JLabel("");
 		lblAvisoClave2.setForeground(Color.RED);
 		lblAvisoClave2.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoClave2.setBounds(494, 154, 18, 14);
@@ -296,13 +284,12 @@ public class RegUsuario extends JDialog {
 		contentPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		rdbtnDoctor = new JRadioButton("Doctor");
 		rdbtnDoctor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rdbtnDoctor.setSelected(true);
 				panelDoctor.setVisible(true);
 				rdbtnAdministrador.setSelected(false);
-				rdbtnRecepcionista.setSelected(false);
+				rdbtnSecretario.setSelected(false);
 				txtID.setText("M-"+Clinica.getInstance().getGeneradorCodigoDoctor());
 			}
 		});
@@ -310,36 +297,33 @@ public class RegUsuario extends JDialog {
 		rdbtnDoctor.setBounds(195, 41, 121, 23);
 		panel_1.add(rdbtnDoctor);
 		
-		rdbtnAdministrador = new JRadioButton("Administrador");
 		rdbtnAdministrador.setSelected(true);
 		rdbtnAdministrador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				rdbtnAdministrador.setSelected(true);
 				panelDoctor.setVisible(false);
 				rdbtnDoctor.setSelected(false);
-				rdbtnRecepcionista.setSelected(false);
-				txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoDoctor());
+				rdbtnSecretario.setSelected(false);
+				txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoUserA());
 			}
 		});
 		rdbtnAdministrador.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		rdbtnAdministrador.setBounds(55, 41, 121, 23);
 		panel_1.add(rdbtnAdministrador);
 		
-		rdbtnRecepcionista = new JRadioButton("Recepcionista");
-		rdbtnRecepcionista.addActionListener(new ActionListener() {
+		rdbtnSecretario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rdbtnRecepcionista.setSelected(true);
+				rdbtnSecretario.setSelected(true);
 				panelDoctor.setVisible(false);
 				rdbtnDoctor.setSelected(false);
 				rdbtnAdministrador.setSelected(false);
-				txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoDoctor());
+				txtID.setText("U-"+Clinica.getInstance().getGeneradorCodigoUserA());
 			}
 		});
-		rdbtnRecepcionista.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		rdbtnRecepcionista.setBounds(335, 41, 121, 23);
-		panel_1.add(rdbtnRecepcionista);
+		rdbtnSecretario.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		rdbtnSecretario.setBounds(335, 41, 121, 23);
+		panel_1.add(rdbtnSecretario);
 		
-		panelDoctor = new JPanel();
 		panelDoctor.setVisible(false);
 		panelDoctor.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelDoctor.setBounds(10, 310, 512, 40);
@@ -349,8 +333,8 @@ public class RegUsuario extends JDialog {
 				rdbtnDoctor.setEnabled(false);
 				rdbtnAdministrador.setSelected(false);
 				rdbtnAdministrador.setEnabled(false);
-				rdbtnRecepcionista.setSelected(false);
-				rdbtnRecepcionista.setEnabled(false);
+				rdbtnSecretario.setSelected(false);
+				rdbtnSecretario.setEnabled(false);
 				panelDoctor.setVisible(true);
 			}
 			else if(((Administrador) updated).getPuestoLaboral().equalsIgnoreCase("Administrador")) {
@@ -358,16 +342,16 @@ public class RegUsuario extends JDialog {
 				rdbtnDoctor.setEnabled(false);
 				rdbtnAdministrador.setSelected(true);
 				rdbtnAdministrador.setEnabled(false);
-				rdbtnRecepcionista.setSelected(false);
-				rdbtnRecepcionista.setEnabled(false);
+				rdbtnSecretario.setSelected(false);
+				rdbtnSecretario.setEnabled(false);
 			}
 			else {
 				rdbtnDoctor.setSelected(false);
 				rdbtnDoctor.setEnabled(false);
 				rdbtnAdministrador.setSelected(false);
 				rdbtnAdministrador.setEnabled(false);
-				rdbtnRecepcionista.setSelected(true);
-				rdbtnRecepcionista.setEnabled(false);
+				rdbtnSecretario.setSelected(true);
+				rdbtnSecretario.setEnabled(false);
 			}
 		}
 		contentPanel.add(panelDoctor);
@@ -378,9 +362,8 @@ public class RegUsuario extends JDialog {
 		lblEspecialidad.setBounds(10, 10, 66, 23);
 		panelDoctor.add(lblEspecialidad);
 		
-		cbxEspecialidad = new JComboBox();
-		cbxEspecialidad.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		cbxEspecialidad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				validarCamposVacios();
 				habilitarBoton();
 			}
@@ -398,10 +381,8 @@ public class RegUsuario extends JDialog {
 		lblNoHabitacion.setBounds(320, 10, 75, 23);
 		panelDoctor.add(lblNoHabitacion);
 		
-		spnHabitacion = new JSpinner();
-		spnHabitacion.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		spnHabitacion.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
 				validarCamposVacios();
 				habilitarBoton();
 			}
@@ -414,7 +395,6 @@ public class RegUsuario extends JDialog {
 		}
 		panelDoctor.add(spnHabitacion);
 		
-		lblAvisoEsp = new JLabel("");
 		lblAvisoEsp.setForeground(Color.RED);
 		lblAvisoEsp.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoEsp.setBounds(302, 10, 18, 14);
@@ -425,7 +405,6 @@ public class RegUsuario extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("");
 				if(updated == null){
 					btnRegistrar.setText("Registrar");
 				}else {
@@ -447,8 +426,8 @@ public class RegUsuario extends JDialog {
 									user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Administrador");
 									Clinica.getInstance().insertarUsuario(user);
 								}
-								if(rdbtnRecepcionista.isSelected()) {
-									user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Recepcionista");
+								if(rdbtnSecretario.isSelected()) {
+									user = new Administrador(txtID.getText(), txtLogin.getText(), txtCedula.getText(), password1, txtNombre.getText(), txtTelefono.getText(), "Secretario");
 									Clinica.getInstance().insertarUsuario(user);
 								}
 								setAlwaysOnTop(false);
@@ -471,7 +450,7 @@ public class RegUsuario extends JDialog {
 										((Administrador) updated).setPuestoLaboral("Administrador");
 									}
 									else {
-										((Administrador) updated).setPuestoLaboral("Recepecionista");
+										((Administrador) updated).setPuestoLaboral("Secretario");
 									}
 										
 								}
@@ -524,7 +503,7 @@ public class RegUsuario extends JDialog {
 		txtTelefono.setValue(null);
 		rdbtnAdministrador.setSelected(true);
 		rdbtnDoctor.setSelected(false);
-		rdbtnRecepcionista.setSelected(false);
+		rdbtnSecretario.setSelected(false);
 		spnHabitacion.setValue(Integer.valueOf(0));
 		panelDoctor.setVisible(false);
 		cbxEspecialidad.setSelectedIndex(0);

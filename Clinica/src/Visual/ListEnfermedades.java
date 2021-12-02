@@ -15,14 +15,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
-import logic.Administrador;
 import logic.Clinica;
 import logic.Enfermedad;
 import logic.Medico;
-import logic.Usuario;
-import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -32,12 +28,16 @@ import java.awt.event.MouseEvent;
 public class ListEnfermedades extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private String[][] tableData = {};
+	private DefaultTableModel model;
+	private Object[] rows;
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private JTable table;
 	Enfermedad selected = null;
+	private Enfermedad enfAgregar = null;
+	private JScrollPane scrollPane_1;
 	private JTextArea textArea;
+	private JButton btnModificar;
 
 	/**
 	 * Launch the application.
@@ -67,7 +67,6 @@ public class ListEnfermedades extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		String[] columnEnf = { "Codigo", "Nombre", "Tipo"};
-		llenarTabla();
 		{
 			panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "Administradores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -85,17 +84,20 @@ public class ListEnfermedades extends JDialog {
 				public void mouseClicked(MouseEvent e) {
 					int aux = table.getSelectedRow();
 					if(aux != -1) {
+						btnModificar.setEnabled(true);;
 						String codigo = (String) table.getValueAt(aux, 0);
 						selected = Clinica.getInstance().buscarEnfermedad(codigo);
 						textArea.setText(selected.getDiagnostico());
 					}
+					else {
+						btnModificar.setEnabled(false);
+					}
 				}
 			});
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.setModel(new DefaultTableModel(tableData, columnEnf));
-			table.getColumnModel().getColumn(0).setPreferredWidth(150);
-			table.getColumnModel().getColumn(1).setPreferredWidth(250);
-			table.getColumnModel().getColumn(2).setPreferredWidth(250);
+			model = new DefaultTableModel();
+			model.setColumnIdentifiers(columnEnf);
+			table.setModel(model);
 			scrollPane.setViewportView(table);
 		}
 		
@@ -105,16 +107,41 @@ public class ListEnfermedades extends JDialog {
 		contentPanel.add(panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
+		scrollPane_1 = new JScrollPane();
+		panel_1.add(scrollPane_1, BorderLayout.CENTER);
+		
 		textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		panel_1.add(textArea, BorderLayout.CENTER);
+		textArea.setEditable(false);
+		scrollPane_1.setViewportView(textArea);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnModificar = new JButton("Modificar");
+				btnModificar = new JButton("");
+				if(Clinica.getLoginUser() instanceof Medico) {
+					btnModificar.setText("Agregar");
+				}
+				else {
+					btnModificar.setText("Modificar");
+				}
+				btnModificar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(Clinica.getLoginUser() instanceof Medico) {
+							enfAgregar = selected;
+							dispose();
+						}
+						else {
+							RegEnfermedades modEnfermedad = new RegEnfermedades(selected);
+							setAlwaysOnTop(false);
+							modEnfermedad.setVisible(true);
+							setAlwaysOnTop(true);
+							llenarTabla();
+							btnModificar.setEnabled(false);
+						}
+					}
+				});
 				btnModificar.setEnabled(false);
 				btnModificar.setActionCommand("OK");
 				buttonPane.add(btnModificar);
@@ -131,22 +158,25 @@ public class ListEnfermedades extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		llenarTabla();
 	}
 	
 	private void llenarTabla()
 	{
-		int cantEnf = Clinica.getInstance().getMisEnfermedades().size();
-		tableData = new String[cantEnf][4];
-		int enf = 0;
+		model.setRowCount(0);
+		rows = new Object[model.getColumnCount()];
 		//{ "Codigo", "Nombre", "Tipo", "Diagnostico" }
 		for (Enfermedad e : Clinica.getInstance().getMisEnfermedades()) 
 		{
-			tableData[enf][0] = e.getCodigo(); 
-			tableData[enf][1] = e.getNombre();	
-			tableData[enf][2] = e.getTipo();
-			tableData[enf][3] = e.getDiagnostico();
-			enf++;
-
+			rows[0] = e.getCodigo(); 
+			rows[1] = e.getNombre();	
+			rows[2] = e.getTipo();
+			model.addRow(rows);
 		}
+		textArea.setText("");
+	}
+	
+	public Enfermedad getEnfAgregar() {
+		return enfAgregar;
 	}
 }

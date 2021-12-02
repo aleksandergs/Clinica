@@ -31,17 +31,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
+import javax.swing.JCheckBox;
+import java.awt.SystemColor;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private Dimension dim;
+	private JPanel panel;
 	private JLabel lblNewLabel_1;
 	private JLabel jlabelImagen;
 	private JPasswordField txtPassword;
 	private JTextField txtUser;
 	private JButton btnLimpiar;
 	private JLabel lblContrasena;
+	private JCheckBox chckbxPasswordVisible;
+	private JLabel PasswordIcon;
 
 	/**
 	 * Launch the application.
@@ -107,44 +113,72 @@ public class Login extends JFrame {
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		panel = new JPanel();
+		contentPane.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
 		
 		lblNewLabel_1 = new JLabel("     Hospital PUCMM");
 		lblNewLabel_1.setBackground(Color.WHITE);
 		lblNewLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 24));
 		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setBounds((dim.width/4)-125, 5, 250, 29);
-		contentPane.add(lblNewLabel_1);
+		panel.add(lblNewLabel_1);
 		
 		txtPassword = new JPasswordField();
-		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtPassword.setEchoChar('*');
+		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtPassword.setBounds((dim.width/4)-100, 187, 200, 23);
-		contentPane.add(txtPassword);
+		panel.add(txtPassword);
+		
+		chckbxPasswordVisible = new JCheckBox("");
+		chckbxPasswordVisible.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chckbxPasswordVisible.isSelected()) {
+					txtPassword.setEchoChar((char)0);
+				}
+				else {
+					txtPassword.setEchoChar('*');
+				}
+			}
+		});
+		chckbxPasswordVisible.setForeground(SystemColor.desktop);
+		chckbxPasswordVisible.setOpaque(false);
+		chckbxPasswordVisible.setBounds((dim.width/4)+100, 180, 60, 37);
+		panel.add(chckbxPasswordVisible);
+		
+		PasswordIcon = new JLabel("");
+		PasswordIcon.setBounds((dim.width/4)+120, 187, 30, 23);
+		ImageIcon back = new ImageIcon("src/Recursos/ShowPass.png");
+		Icon icon = new ImageIcon(back.getImage().getScaledInstance(PasswordIcon.getWidth(), PasswordIcon.getHeight(), Image.SCALE_DEFAULT));
+		PasswordIcon.setIcon(icon);
+		panel.add(PasswordIcon);
 		
 		JLabel lblIniciarSesion = new JLabel("Iniciar Sesion: ");
 		lblIniciarSesion.setForeground(Color.WHITE);
 		lblIniciarSesion.setFont(new Font("Times New Roman", Font.PLAIN, 24));
 		lblIniciarSesion.setBackground(Color.WHITE);
 		lblIniciarSesion.setBounds((dim.width/4)-100, 88, 200, 29);
-		contentPane.add(lblIniciarSesion);
+		panel.add(lblIniciarSesion);
 		
 		JLabel lblNewLabel = new JLabel("Usuario:");
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel.setBounds((dim.width/4)-155, 129, 55, 23);
-		contentPane.add(lblNewLabel);
+		panel.add(lblNewLabel);
 		
 		txtUser = new JTextField();
-		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtUser.setBounds((dim.width/4)-100, 129, 200, 23);
-		contentPane.add(txtUser);
+		panel.add(txtUser);
 		txtUser.setColumns(10);
 		
 		lblContrasena = new JLabel("Contrasena:");
 		lblContrasena.setForeground(Color.WHITE);
 		lblContrasena.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblContrasena.setBounds((dim.width/4)-180, 187, 80, 23);
-		contentPane.add(lblContrasena);
+		panel.add(lblContrasena);
 		
 		JButton btnNewButton = new JButton("Entrar");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -158,8 +192,9 @@ public class Login extends JFrame {
 						admin.setVisible(true);
 					}
 					else if(Clinica.getLoginUser() instanceof Medico) {
-						//PrincipalDoctor doc = new PrincipalAdmin();
-						//doc.setVisible(true);
+						PrincipalAdministrador doc = new PrincipalAdministrador();
+						dispose();
+						doc.setVisible(true);
 					}
 				}
 				else {
@@ -169,7 +204,7 @@ public class Login extends JFrame {
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnNewButton.setBounds((dim.width/4)+20, 234, 80, 23);
-		contentPane.add(btnNewButton);
+		panel.add(btnNewButton);
 		
 		btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.addActionListener(new ActionListener() {
@@ -180,13 +215,13 @@ public class Login extends JFrame {
 		});
 		btnLimpiar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnLimpiar.setBounds((dim.width/4)-100, 234, 80, 23);
-		contentPane.add(btnLimpiar);
+		panel.add(btnLimpiar);
 		
 		jlabelImagen = new JLabel("New label");
 		jlabelImagen.setBounds(0, 0, dim.width/2, dim.height/2);
 		ImageIcon fondo = new ImageIcon("src/Recursos/hospital1.jpg");
 		Icon icono = new ImageIcon(fondo.getImage().getScaledInstance(jlabelImagen.getWidth(), jlabelImagen.getHeight(), Image.SCALE_DEFAULT));
 		jlabelImagen.setIcon(icono);
-		contentPane.add(jlabelImagen);
+		panel.add(jlabelImagen);
 	}
 }

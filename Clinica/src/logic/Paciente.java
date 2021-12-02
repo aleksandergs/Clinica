@@ -19,9 +19,10 @@ public class Paciente implements Serializable{
 	private HistorialClinico historia;
 	private ArrayList<Consulta> misConsultas;
 	private String alergias;
+	private String tipoSangre;
 	
 	public Paciente(String cedula, String nombre, String genero, Date fechaNacimiento, String direccion,
-			String telefono, HistorialClinico historia, ArrayList<Consulta> misConsultas, String alergias) {
+			String telefono, String alergias, String tipoSangre) {
 		super();
 		this.cedula = cedula;
 		this.nombre = nombre;
@@ -29,9 +30,10 @@ public class Paciente implements Serializable{
 		this.fechaNacimiento = fechaNacimiento;
 		this.direccion = direccion;
 		this.telefono = telefono;
-		this.historia = historia;
-		this.misConsultas = misConsultas;
+		this.historia = new HistorialClinico();
+		this.misConsultas = new ArrayList<Consulta>();
 		this.alergias = alergias;
+		this.tipoSangre = tipoSangre;
 	}
 
 	public String getCedula() {
@@ -104,6 +106,29 @@ public class Paciente implements Serializable{
 
 	public void setAlergias(String alergias) {
 		this.alergias = alergias;
+	}
+	
+	public String getTipoSangre() {
+		return tipoSangre;
+	}
+
+	public void setTipoSangre(String tipoSangre) {
+		this.tipoSangre = tipoSangre;
+	}
+
+	public Consulta buscarConsulta(String codigo)
+	{
+		Consulta consulta = null;
+		boolean encontrado = false;
+		int i = 0;
+		while (!encontrado && i < misConsultas.size()) {
+			if(misConsultas.get(i).getCodConsulta().equalsIgnoreCase(codigo)) {
+				encontrado=true;
+				consulta = misConsultas.get(i);
+			}
+			i++;
+		}
+		return consulta;
 	}
 	
 }
