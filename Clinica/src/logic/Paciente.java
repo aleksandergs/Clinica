@@ -2,7 +2,6 @@ package logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Paciente implements Serializable{
 
@@ -13,7 +12,7 @@ public class Paciente implements Serializable{
 	private String cedula;
 	private String nombre;
 	private String genero;
-	private Date fechaNacimiento;
+	private String fechaNacimiento;
 	private String direccion;
 	private String telefono;
 	private HistorialClinico historia;
@@ -21,7 +20,7 @@ public class Paciente implements Serializable{
 	private String alergias;
 	private String tipoSangre;
 	
-	public Paciente(String cedula, String nombre, String genero, Date fechaNacimiento, String direccion,
+	public Paciente(String cedula, String nombre, String genero, String fechaNacimiento, String direccion,
 			String telefono, String alergias, String tipoSangre) {
 		super();
 		this.cedula = cedula;
@@ -60,11 +59,11 @@ public class Paciente implements Serializable{
 		this.genero = genero;
 	}
 
-	public Date getFechaNacimiento() {
+	public String getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(String fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 

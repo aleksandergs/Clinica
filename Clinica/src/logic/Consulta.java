@@ -1,16 +1,14 @@
 package logic;
 
-import java.util.Date;
-
 public class Consulta {
 	
 	private String codConsulta;
-	private Date fechaConsulta;
+	private String fechaConsulta;
 	private String Sintomas;
 	private String diagnostico;
 	private Enfermedad enfermedad;
 	
-	public Consulta(String codConsulta, Date fechaConsulta, String sintomas, String diagnostico,
+	public Consulta(String codConsulta, String fechaConsulta, String sintomas, String diagnostico,
 			Enfermedad enfermedad) {
 		super();
 		this.codConsulta = codConsulta;
@@ -28,11 +26,11 @@ public class Consulta {
 		this.codConsulta = codConsulta;
 	}
 
-	public Date getFechaConsulta() {
+	public String getFechaConsulta() {
 		return fechaConsulta;
 	}
 
-	public void setFechaConsulta(Date fechaConsulta) {
+	public void setFechaConsulta(String fechaConsulta) {
 		this.fechaConsulta = fechaConsulta;
 	}
 

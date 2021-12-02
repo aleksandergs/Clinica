@@ -10,12 +10,12 @@ public class CitaMedica implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String codigo;
-	private Date fecha;
+	private String fecha;
 	private String nombrePersona;
 	private String numeroPersona;
 	Medico medico;
 	
-	public CitaMedica(String codigo, Date fecha, String nombrePersona, String numeroPersona, Medico medico) {
+	public CitaMedica(String codigo, String fecha, String nombrePersona, String numeroPersona, Medico medico) {
 		super();
 		this.codigo = codigo;
 		this.fecha = fecha;
@@ -30,10 +30,10 @@ public class CitaMedica implements Serializable{
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 	public String getNombrePersona() {

@@ -2,7 +2,6 @@ package logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Clinica implements Serializable{
 
@@ -84,13 +83,13 @@ public class Clinica implements Serializable{
 		return login;
 	}
 	
-	public Paciente buscarPaciente(String cedula)
+	public Paciente buscarPaciente(String cedula, String fechaNacimiento)
 	{
 		Paciente paciente = null;
 		boolean encontrado = false;
 		int i = 0;
 		while (!encontrado && i < misPacientes.size()) {
-			if(misPacientes.get(i).getCedula().equalsIgnoreCase(cedula)) {
+			if(misPacientes.get(i).getCedula().equalsIgnoreCase(cedula) && misPacientes.get(i).getFechaNacimiento().equalsIgnoreCase(fechaNacimiento)) {
 				encontrado=true;
 				paciente = misPacientes.get(i);
 			}
@@ -272,16 +271,16 @@ public class Clinica implements Serializable{
 		return encontrado;
 	}
 	
-	public boolean buscarCitaMedicaExiste(Date fecha, CitaMedica cita, String doc) {
+	public boolean buscarCitaMedicaExiste(String fecha, CitaMedica cita, String doc) {
 		int i = 0;
 		boolean encontrado = false;
 		while (!encontrado && i < misCitas.size()) {
 			if(cita != null) {
-				if(cita.getFecha().compareTo(fecha) == 0 && cita.getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
+				if(cita.getFecha().equalsIgnoreCase(fecha) && cita.getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
 					return false;
 				}
 			}
-			if (misCitas.get(i).getFecha().compareTo(fecha) == 0 && misCitas.get(i).getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
+			if (misCitas.get(i).getFecha().equalsIgnoreCase(fecha) && misCitas.get(i).getMedico().getCodigoUsuario().equalsIgnoreCase(doc)) {
 				encontrado = true;
 			}
 			i++;

@@ -236,14 +236,7 @@ public class RegConsulta extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-						String fecha = sdf.format(spnFecha.getValue());
-						Date fechaConsulta= new Date();
-						try {
-							fechaConsulta = sdf.parse(fecha);
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+						String fechaConsulta = sdf.format(spnFecha.getValue());
 						Enfermedad disease = null;
 						if(!txtEnfermedad.getText().isEmpty()) {
 							disease = Clinica.getInstance().buscarEnfermedad(txtEnfermedad.getText().substring(0, txtEnfermedad.getText().indexOf(":")));

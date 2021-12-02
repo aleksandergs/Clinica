@@ -50,7 +50,6 @@ public class RegCita extends JDialog {
 	private JTextField txtDoctor;
 	private JTextField txtFiltro;
 	private JTable table;
-	private Medico selected;
 	private static DefaultTableModel model;
 	private static Object[] rows;
 	private JComboBox<String> cbxFiltrarPor;
@@ -308,15 +307,8 @@ public class RegCita extends JDialog {
 					public void actionPerformed(ActionEvent arg0) {
 						String horario = cbxHorario.getSelectedItem().toString().substring(0, cbxHorario.getSelectedItem().toString().indexOf("-"));
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-						SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-						String fecha = sdf.format(spnFecha.getValue());
-						Date fechacita = new Date();
+						String fechacita = sdf.format(spnFecha.getValue())+" "+horario;
 						Medico medico = (Medico) Clinica.getInstance().buscarUsuario(txtDoctor.getText().substring(0, txtDoctor.getText().indexOf(":")));
-						try {
-							fechacita = formatter.parse(fecha+" "+horario);
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
 						if(!Clinica.getInstance().buscarCitaMedicaExiste(fechacita, updated, txtDoctor.getText().substring(0, txtDoctor.getText().indexOf(":")))) {
 							if(updated == null) {
 								CitaMedica cita = null;

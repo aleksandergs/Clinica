@@ -254,22 +254,6 @@ public class PrincipalAdministrador extends JFrame {
 		mntmNewMenuItem_6.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuPacientes.add(mntmNewMenuItem_6);
 		
-		JMenu mnNewMenu = new JMenu("Consultas");
-		mnNewMenu.setVisible(false);
-		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		menuBar.add(mnNewMenu);
-		if((Clinica.getLoginUser() instanceof Medico)) {
-			mnNewMenu.setVisible(true);
-		}
-		
-		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Registrar");
-		mntmNewMenuItem_11.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		mnNewMenu.add(mntmNewMenuItem_11);
-		
-		JMenuItem mntmNewMenuItem_12 = new JMenuItem("Listado");
-		mntmNewMenuItem_12.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		mnNewMenu.add(mntmNewMenuItem_12);
-		
 		JMenu menuPerfil = new JMenu("Perfil");
 		menuPerfil.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuBar.add(menuPerfil);

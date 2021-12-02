@@ -11,6 +11,7 @@ import java.awt.Font;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
 
+import logic.Clinica;
 import logic.Paciente;
 
 import javax.swing.UIManager;
@@ -172,6 +173,7 @@ public class RegPaciente extends JDialog {
 			spnFecha.setBounds(110, 50, 206, 23);
 			if(updated != null) {
 				spnFecha.setValue(updated.getFechaNacimiento());;
+				spnFecha.setEnabled(false);
 			}
 			panel.add(spnFecha);
 			
@@ -191,6 +193,7 @@ public class RegPaciente extends JDialog {
 			txtCedula.setBounds(110, 80, 206, 23);
 			if(updated != null) {
 				txtCedula.setText(updated.getCedula());
+				txtCedula.setEditable(false);
 			}
 			panel.add(txtCedula);
 			
@@ -298,17 +301,11 @@ public class RegPaciente extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-						String fecha = sdf.format(spnFecha.getValue());
-						Date birthday= new Date();
-						try {
-							birthday = sdf.parse(fecha);
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+						String birthday = sdf.format(spnFecha.getValue());
 						if(updated == null) {
 							Paciente paci = null;
 							paci = new Paciente(txtCedula.getText(), txtNombre.getText(), cbxGenero.getSelectedItem().toString(), birthday, txtDireccion.getText(), txtTelefono.getText(), txtAlergias.getText(), cbxTipoSangre.getSelectedItem().toString());
+							Clinica.getInstance().insertarPaciente(paci);
 							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 							RegConsulta registrarConsulta = new RegConsulta(null, paci);
@@ -316,13 +313,12 @@ public class RegPaciente extends JDialog {
 						}
 						else {
 							updated.setAlergias(txtAlergias.getText());
-							updated.setCedula(txtCedula.getText());
 							updated.setDireccion(txtDireccion.getText());
-							updated.setFechaNacimiento(birthday);
 							updated.setGenero(cbxGenero.getSelectedItem().toString());
 							updated.setNombre(txtNombre.getText());
 							updated.setTelefono(txtTelefono.getText());
 							updated.setTipoSangre(cbxTipoSangre.getSelectedItem().toString());
+							//Clinica.getInstance().modificarPaciente(updated);
 							JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
