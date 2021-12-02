@@ -333,7 +333,7 @@ public class Clinica implements Serializable{
 		}
 	}
 	
-	ArrayList<CitaMedica> CitasByMedico(Medico medico)
+	public ArrayList<CitaMedica> GetCitasByMedico(Medico medico)
 	{
 		ArrayList<CitaMedica> citas = new ArrayList<>();
 		for(CitaMedica citaMedica : misCitas)
