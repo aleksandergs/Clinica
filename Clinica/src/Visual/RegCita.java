@@ -188,6 +188,12 @@ public class RegCita extends JDialog {
 		panel.add(txtDoctor);
 		
 		spnFecha = new JSpinner();
+		spnFecha.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				habilitarBoton();
+			}
+		});
 		Date date =  new Date();
 		spnFecha.setModel(new SpinnerDateModel(date, null, null, Calendar.YEAR));
 		JSpinner.DateEditor de_spnFecha = new JSpinner.DateEditor(spnFecha, "dd/MM/yyyy");
@@ -228,14 +234,16 @@ public class RegCita extends JDialog {
 		panel.add(lblHorario);
 		
 		cbxHorario = new JComboBox();
+		cbxHorario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		cbxHorario.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		cbxHorario.setModel(new DefaultComboBoxModel(new String[] {"08:00 - 08:30", "08:30 - 09:00", "09:00 - 09:30", "09:30 - 10:00", "10:00 - 10:30", "10:30 - 11:00", "11:00 - 11:30", "11:30 - 12:00", "12:00 - 12:30", "12:30 - 13:00", "13:00 - 13:30", "13:30 - 14:00", "14:00 - 14:30", "14:30 - 15:00", "15:00 - 15:30", "15:30 - 16:00", "16:00 - 16:30", "16:30 - 17:00", "17:00 - 17:30", "17:30 - 18:00", "19:00 - 19:30", "19:30 - 20:00"}));
 		cbxHorario.setBounds(290, 114, 138, 23);
-		if(updated != null) {
-			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-			String fecha = formatter.format(updated.getFecha());
-			cbxHorario.setSelectedItem(fecha);
-		}
+		if(updated != null)
+			cbxHorario.setSelectedItem(updated.getFecha());
 		panel.add(cbxHorario);
 		
 		JPanel panel_1 = new JPanel();

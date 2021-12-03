@@ -229,6 +229,13 @@ public class PrincipalAdministrador extends JFrame {
 		menuCitasMed.add(mntmNewMenuItem_8);
 		
 		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Listado");
+		mntmNewMenuItem_10.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListCitaMedica dialog = new ListCitaMedica(Clinica.getLoginUser());
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		mntmNewMenuItem_10.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuCitasMed.add(mntmNewMenuItem_10);
 		
@@ -483,7 +490,10 @@ public class PrincipalAdministrador extends JFrame {
 		lblCantCitas.setForeground(Color.BLACK);
 		lblCantCitas.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblCantCitas.setBounds(0, 57, 240, 33);
-		lblCantCitas.setText(String.valueOf(Clinica.getInstance().getMisCitas().size()));
+		if(Clinica.getLoginUser() instanceof Medico)
+			lblCantCitas.setText(String.valueOf(Clinica.getInstance().GetCitasByMedico((Medico)Clinica.getLoginUser()).size()));
+		else
+			lblCantCitas.setText(String.valueOf(Clinica.getInstance().getMisCitas().size()));
 		panelCitas.add(lblCantCitas);
 		
 		JLabel lblCantidadDeCitas = new JLabel("Cantidad de Citas Medicas registradas");
@@ -496,6 +506,9 @@ public class PrincipalAdministrador extends JFrame {
 		btnVerCitasMedicas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				actualizarDashboard();
+				ListCitaMedica dialog = new ListCitaMedica(Clinica.getLoginUser());
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
 			}
 		});
 		btnVerCitasMedicas.setFont(new Font("Tahoma", Font.PLAIN, 12));
