@@ -1,6 +1,13 @@
 package logic;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Clinica implements Serializable{
@@ -15,6 +22,9 @@ public class Clinica implements Serializable{
 	private ArrayList<Enfermedad> misEnfermedades;
 	private ArrayList<CitaMedica> misCitas;
 	private static Clinica clinica;
+	private static DataInputStream EntradaSocket;
+	private static DataOutputStream SalidaSocket;
+	static Socket sfd = null;
 	private int generadorCodigoEnfermedad = 1;
 	private int generadorCodigoVacuna = 1;
 	private int generadorCodigoUserA = 1;
@@ -342,5 +352,38 @@ public class Clinica implements Serializable{
 				citas.add(citaMedica);
 		}
 		return citas;
+	}
+	
+	public boolean ConectarServer(String host, int port)
+	{
+		try
+	    {
+	      sfd = new Socket(host,port);
+	      EntradaSocket = new DataInputStream(new BufferedInputStream(sfd.getInputStream()));
+	      SalidaSocket = new DataOutputStream(new BufferedOutputStream(sfd.getOutputStream()));
+	      return true;
+	    }
+	    catch (UnknownHostException uhe)
+	    {
+	      System.out.println("No se puede acceder al servidor.");
+	    }
+	    catch (IOException ioe)
+	    {
+	      System.out.println("Comunicación rechazada.");
+	    }
+		
+		return false;
+	}
+
+	public static DataInputStream getEntradaSocket() {
+		return EntradaSocket;
+	}
+
+	public static DataOutputStream getSalidaSocket() {
+		return SalidaSocket;
+	}
+
+	public static Socket getSfd() {
+		return sfd;
 	}
 }

@@ -84,7 +84,7 @@ public class ListEnfermedades extends JDialog {
 				public void mouseClicked(MouseEvent e) {
 					int aux = table.getSelectedRow();
 					if(aux != -1) {
-						btnModificar.setEnabled(true);;
+						btnModificar.setEnabled(true);
 						String codigo = (String) table.getValueAt(aux, 0);
 						selected = Clinica.getInstance().buscarEnfermedad(codigo);
 						textArea.setText(selected.getDiagnostico());

@@ -54,6 +54,8 @@ public class PrincipalAdministrador extends JFrame {
 	private JPanel panelSecre;
 	private JPanel panelDoctores;
 	private JPanel panelEnfermedades;
+	private JLabel lblServer;
+	private boolean ServerConnected;
 
 	/**
 	 * Launch the application.
@@ -78,19 +80,7 @@ public class PrincipalAdministrador extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				FileOutputStream clinica2;
-				ObjectOutputStream clinicaWrite;
-				try {
-					clinica2 = new	FileOutputStream("clinica.dat");
-					clinicaWrite = new ObjectOutputStream(clinica2);
-					clinicaWrite.writeObject(Clinica.getInstance());
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				Guardando("Clinica.dat");
 			}
 		});
 		
@@ -101,6 +91,8 @@ public class PrincipalAdministrador extends JFrame {
 		setLocationRelativeTo(null);
 		ImageIcon logo = new ImageIcon("src/Recursos/logo.jpg");
 		setIconImage(logo.getImage());
+		
+		ServerConnected = Clinica.getInstance().ConectarServer("127.0.0.1",7000);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -283,19 +275,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Salir");
 		mntmNewMenuItem_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileOutputStream clinica2;
-				ObjectOutputStream clinicaWrite;
-				try {
-					clinica2 = new  FileOutputStream("clinica.dat");
-					clinicaWrite = new ObjectOutputStream(clinica2);
-					clinicaWrite.writeObject(Clinica.getInstance());
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				Guardando("Clinica.dat");
 				Login login = new Login();
 				dispose();
 				login.setVisible(true);
@@ -313,6 +293,15 @@ public class PrincipalAdministrador extends JFrame {
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "DashBoard", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
+		
+		lblServer = new JLabel("");
+		lblServer.setBounds(10, 28, 304, 14);
+		panel.add(lblServer);
+		
+		if (ServerConnected)
+			lblServer.setText("127.0.0.1 se encuentra conectado al server");
+		else
+			lblServer.setText("No se encuentra conectado al server");
 		
 		panelSecre = new JPanel();
 		panelSecre.setVisible(false);
@@ -585,5 +574,39 @@ public class PrincipalAdministrador extends JFrame {
 		lblCantDoctores.setText(String.valueOf(Clinica.getInstance().cantUsersType()[2]));
 		lblCantAdministradores.setText(String.valueOf(Clinica.getInstance().cantUsersType()[0]));
 		lblCantSecretarios.setText(String.valueOf(Clinica.getInstance().cantUsersType()[1]));
+	}
+	
+	public void Guardando(String nombre)
+	{
+		if (ServerConnected)
+		{
+			try
+		    {
+				
+				Clinica.getInstance().getSalidaSocket().writeUTF("Save-"+nombre);
+				Clinica.getInstance().getSalidaSocket().flush();
+		    }
+		    catch (IOException ioe)
+		    {
+		    	System.out.println("Error: "+ioe);
+		    }
+		}
+		else
+		{
+			try {
+				FileOutputStream clinica2;
+				ObjectOutputStream clinicaWrite;
+				clinica2 = new  FileOutputStream(nombre);
+				clinicaWrite = new ObjectOutputStream(clinica2);
+				clinicaWrite.writeObject(Clinica.getInstance());
+				clinicaWrite.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 }
