@@ -31,6 +31,7 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class PrincipalAdministrador extends JFrame {
@@ -97,6 +98,8 @@ public class PrincipalAdministrador extends JFrame {
 		dim = getToolkit().getScreenSize();
 		setSize(dim.width, dim.height-40);
 		setLocationRelativeTo(null);
+		ImageIcon logo = new ImageIcon("src/Recursos/logo.jpg");
+		setIconImage(logo.getImage());
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

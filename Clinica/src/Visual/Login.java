@@ -109,6 +109,10 @@ public class Login extends JFrame {
 		dim = getToolkit().getScreenSize();
 		setSize(dim.width/2, dim.height/2);
 		setLocationRelativeTo(null);
+		
+		ImageIcon logo = new ImageIcon("src/Recursos/logo.jpg");
+		setIconImage(logo.getImage());
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
