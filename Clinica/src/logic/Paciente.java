@@ -17,6 +17,7 @@ public class Paciente implements Serializable{
 	private String telefono;
 	private HistorialClinico historia;
 	private ArrayList<Consulta> misConsultas;
+	private ArrayList<Vacuna> misVacunas;
 	private String alergias;
 	private String tipoSangre;
 	
@@ -31,6 +32,7 @@ public class Paciente implements Serializable{
 		this.telefono = telefono;
 		this.historia = new HistorialClinico();
 		this.misConsultas = new ArrayList<Consulta>();
+		this.misVacunas = new ArrayList<Vacuna>();
 		this.alergias = alergias;
 		this.tipoSangre = tipoSangre;
 	}
@@ -115,6 +117,14 @@ public class Paciente implements Serializable{
 		this.tipoSangre = tipoSangre;
 	}
 
+	public ArrayList<Vacuna> getMisVacunas() {
+		return misVacunas;
+	}
+
+	public void setMisVacunas(ArrayList<Vacuna> misVacunas) {
+		this.misVacunas = misVacunas;
+	}
+	
 	public Consulta buscarConsulta(String codigo)
 	{
 		Consulta consulta = null;

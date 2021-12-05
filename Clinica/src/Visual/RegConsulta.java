@@ -42,13 +42,13 @@ public class RegConsulta extends JDialog {
 	private JTextField txtEnfermedad;
 	private JSpinner spnFecha;
 	private JTextArea txtSintomas;
-	private JTextArea txtDiagnostico;
+	private JTextArea txtDiagnostico = new JTextArea();
 	private Consulta updated = null;
 	private Paciente paciente = null;
 	private JButton btnCancelar;
-	private JButton btnRegistrar;
+	private JButton btnRegistrar = new JButton("");
 	private JTextField txtPaciente;
-	private JLabel lblAvisoDiagnostico;
+	private JLabel lblAvisoDiagnostico = new JLabel("*");
 
 	/**
 	 * Launch the application.
@@ -67,6 +67,7 @@ public class RegConsulta extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegConsulta(Consulta consulta, Paciente customer) {
+		setModal(true);
 		setBounds(100, 100, 500, 477);
 		updated = consulta;
 		paciente = customer;
@@ -181,7 +182,6 @@ public class RegConsulta extends JDialog {
 			scrollPane_1.setBounds(262, 169, 200, 179);
 			panel.add(scrollPane_1);
 			
-			txtDiagnostico = new JTextArea();
 			txtDiagnostico.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent arg0) {
@@ -214,7 +214,6 @@ public class RegConsulta extends JDialog {
 			}
 			panel.add(txtPaciente);
 			
-			lblAvisoDiagnostico = new JLabel("");
 			lblAvisoDiagnostico.setForeground(Color.RED);
 			lblAvisoDiagnostico.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAvisoDiagnostico.setBounds(325, 144, 18, 14);
@@ -225,7 +224,6 @@ public class RegConsulta extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("");
 				btnRegistrar.setEnabled(false);
 				if(updated == null){
 					btnRegistrar.setText("Registrar");
@@ -246,13 +244,13 @@ public class RegConsulta extends JDialog {
 							consulta = new Consulta(txtCodigo.getText(), fechaConsulta, txtSintomas.getText(), txtDiagnostico.getText(), disease);
 							Clinica.getInstance().insertarConsulta(consulta, paciente);
 							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-							btnRegistrar.setEnabled(false);
 						}
 						else {
 							updated.setDiagnostico(txtDiagnostico.getText());
 							updated.setEnfermedad(disease);
 							updated.setFechaConsulta(fechaConsulta);
 							updated.setSintomas(txtSintomas.getText());
+							Clinica.getInstance().modificarConsulta(updated);
 							JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}

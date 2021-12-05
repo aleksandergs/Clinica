@@ -41,13 +41,14 @@ public class RegVacunas extends JDialog {
 	private JTextArea txtEfectos;
 	private JLabel lblAvisoNombre;
 	private JButton btnRegistrar;
+	private Vacuna updated = null;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegVacunas dialog = new RegVacunas();
+			RegVacunas dialog = new RegVacunas(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -58,9 +59,14 @@ public class RegVacunas extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegVacunas() {
+	public RegVacunas(Vacuna vacuna) {
+		updated = vacuna;
 		setAlwaysOnTop(true);
-		setTitle("Registro de Vacunas");
+		if(updated == null){
+			setTitle("Registrar Vacuna");
+		}else {
+			setTitle("Modificar Vacuna");
+		}
 		setModal(true);
 		setResizable(false);
 		setBounds(100, 100, 450, 388);
@@ -85,6 +91,12 @@ public class RegVacunas extends JDialog {
 				txtId.setEditable(false);
 				txtId.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtId.setBounds(114, 33, 186, 23);
+				if(updated != null) {
+					txtId.setText(updated.getCodigo());
+				}
+				else {
+					txtId.setText("V-"+Clinica.getInstance().getGeneradorCodigoVacuna());
+				}
 				txtId.setText("V-"+Clinica.getInstance().getGeneradorCodigoVacuna());
 				panel.add(txtId);
 				txtId.setColumns(10);
@@ -107,6 +119,9 @@ public class RegVacunas extends JDialog {
 				txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtNombre.setColumns(10);
 				txtNombre.setBounds(114, 63, 298, 23);
+				if(updated != null) {
+					txtNombre.setText(updated.getNombre());
+				}
 				panel.add(txtNombre);
 			}
 			{
@@ -127,6 +142,9 @@ public class RegVacunas extends JDialog {
 				txtFabricante.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtFabricante.setColumns(10);
 				txtFabricante.setBounds(114, 123, 298, 23);
+				if(updated != null) {
+					txtFabricante.setText(updated.getFabricante());
+				}
 				panel.add(txtFabricante);
 			}
 			{
@@ -147,6 +165,9 @@ public class RegVacunas extends JDialog {
 				txtContra.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				txtContra.setColumns(10);
 				txtContra.setBounds(114, 93, 298, 23);
+				if(updated != null) {
+					txtContra.setText(updated.getEnContraDe());
+				}
 				panel.add(txtContra);
 			}
 			{
@@ -167,6 +188,9 @@ public class RegVacunas extends JDialog {
 				spnDosis.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 				spnDosis.setFont(new Font("Tahoma", Font.PLAIN, 12));
 				spnDosis.setBounds(114, 153, 186, 23);
+				if(updated != null) {
+					spnDosis.setValue(Integer.valueOf(updated.getDosis()));
+				}
 				panel.add(spnDosis);
 			}
 			
@@ -189,6 +213,9 @@ public class RegVacunas extends JDialog {
 				}
 			});
 			scrollPane.setViewportView(txtEfectos);
+			if(updated != null) {
+				txtEfectos.setText(updated.getEfectos());
+			}
 			{
 				lblAvisoNombre = new JLabel("");
 				lblAvisoNombre.setForeground(Color.RED);
@@ -220,14 +247,30 @@ public class RegVacunas extends JDialog {
 				btnRegistrar = new JButton("Registrar");
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Vacuna vaccine = null;
-						vaccine = new Vacuna(txtId.getText(), txtNombre.getText(), txtContra.getText(), Integer.valueOf(spnDosis.getValue().toString()), txtFabricante.getText(), txtEfectos.getText());
-						Clinica.getInstance().insertarVacuna(vaccine);
-						setAlwaysOnTop(false);
-						JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						setAlwaysOnTop(true);
-						btnRegistrar.setEnabled(false);
-						clean();
+						if(updated == null) {
+							Vacuna vaccine = null;
+							vaccine = new Vacuna(txtId.getText(), txtNombre.getText(), txtContra.getText(), Integer.valueOf(spnDosis.getValue().toString()), txtFabricante.getText(), txtEfectos.getText());
+							Clinica.getInstance().insertarVacuna(vaccine);
+							setAlwaysOnTop(false);
+							JOptionPane.showMessageDialog(null, "Registro Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							setAlwaysOnTop(true);
+							btnRegistrar.setEnabled(false);
+							clean();
+							habilitarBoton();
+							validarCamposVacios();
+						}
+						else {
+							updated.setNombre(txtNombre.getText());
+							updated.setDosis(Integer.valueOf(spnDosis.getValue().toString()));
+							updated.setEfectos(txtEfectos.getText());
+							updated.setEnContraDe(txtContra.getText());
+							updated.setFabricante(txtFabricante.getText());
+							Clinica.getInstance().modificarVacuna(updated);
+							setAlwaysOnTop(false);
+							JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							setAlwaysOnTop(true);
+							dispose();
+						}
 					}
 				});
 				btnRegistrar.setEnabled(false);

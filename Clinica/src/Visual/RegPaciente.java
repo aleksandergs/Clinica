@@ -76,6 +76,7 @@ public class RegPaciente extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegPaciente(Paciente paciente) {
+		setModal(true);
 		updated = paciente;
 		setBounds(100, 100, 545, 450);
 		if(updated == null){
@@ -172,7 +173,15 @@ public class RegPaciente extends JDialog {
 			spnFecha.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			spnFecha.setBounds(110, 50, 206, 23);
 			if(updated != null) {
-				spnFecha.setValue(updated.getFechaNacimiento());;
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+				Date fecha = null;
+				try {
+					fecha = formatter.parse(updated.getFechaNacimiento());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				spnFecha.setValue(fecha);
 				spnFecha.setEnabled(false);
 			}
 			panel.add(spnFecha);
@@ -318,7 +327,7 @@ public class RegPaciente extends JDialog {
 							updated.setNombre(txtNombre.getText());
 							updated.setTelefono(txtTelefono.getText());
 							updated.setTipoSangre(cbxTipoSangre.getSelectedItem().toString());
-							//Clinica.getInstance().modificarPaciente(updated);
+							Clinica.getInstance().modificarPaciente(updated);
 							JOptionPane.showMessageDialog(null, "Modificacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}

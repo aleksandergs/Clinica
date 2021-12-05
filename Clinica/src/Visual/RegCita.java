@@ -41,6 +41,8 @@ import java.util.Calendar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class RegCita extends JDialog {
 
@@ -188,9 +190,9 @@ public class RegCita extends JDialog {
 		panel.add(txtDoctor);
 		
 		spnFecha = new JSpinner();
-		spnFecha.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		spnFecha.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				validarCamposVacios();
 				habilitarBoton();
 			}
 		});
@@ -236,14 +238,18 @@ public class RegCita extends JDialog {
 		cbxHorario = new JComboBox();
 		cbxHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				validarCamposVacios();
+				habilitarBoton();
 			}
 		});
 		cbxHorario.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		cbxHorario.setModel(new DefaultComboBoxModel(new String[] {"08:00 - 08:30", "08:30 - 09:00", "09:00 - 09:30", "09:30 - 10:00", "10:00 - 10:30", "10:30 - 11:00", "11:00 - 11:30", "11:30 - 12:00", "12:00 - 12:30", "12:30 - 13:00", "13:00 - 13:30", "13:30 - 14:00", "14:00 - 14:30", "14:30 - 15:00", "15:00 - 15:30", "15:30 - 16:00", "16:00 - 16:30", "16:30 - 17:00", "17:00 - 17:30", "17:30 - 18:00", "19:00 - 19:30", "19:30 - 20:00"}));
 		cbxHorario.setBounds(290, 114, 138, 23);
-		if(updated != null)
-			cbxHorario.setSelectedItem(updated.getFecha());
+		if(updated != null) {
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+			String fecha = formatter.format(updated.getFecha());
+			cbxHorario.setSelectedItem(fecha);
+		}
 		panel.add(cbxHorario);
 		
 		JPanel panel_1 = new JPanel();
@@ -316,8 +322,16 @@ public class RegCita extends JDialog {
 						String horario = cbxHorario.getSelectedItem().toString().substring(0, cbxHorario.getSelectedItem().toString().indexOf("-"));
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 						String fechacita = sdf.format(spnFecha.getValue())+" "+horario;
+						SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+						Date fechaEvaluar = new Date();
+						try {
+							fechaEvaluar = formatter.parse(fechacita);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						Medico medico = (Medico) Clinica.getInstance().buscarUsuario(txtDoctor.getText().substring(0, txtDoctor.getText().indexOf(":")));
-						if(!Clinica.getInstance().buscarCitaMedicaExiste(fechacita, updated, txtDoctor.getText().substring(0, txtDoctor.getText().indexOf(":")))) {
+						if(!Clinica.getInstance().buscarCitaMedicaExiste(fechacita, updated, txtDoctor.getText().substring(0, txtDoctor.getText().indexOf(":"))) && fechaEvaluar.compareTo(new Date()) > 0) {
 							if(updated == null) {
 								CitaMedica cita = null;
 								cita = new CitaMedica(txtCodigo.getText(), fechacita, txtNombre.getText(), txtTelefono.getText(), medico);
@@ -339,7 +353,7 @@ public class RegCita extends JDialog {
 							habilitarBoton();
 						}
 						else {
-							JOptionPane.showMessageDialog(null, "Fecha o Horario no disponibles", "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Fecha u Horario no disponibles", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				});
@@ -384,7 +398,7 @@ public class RegCita extends JDialog {
 		TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
 		table.setRowSorter(tsr);
 		
-		tsr.setRowFilter(RowFilter.regexFilter("(?i)"+doctor, cbxFiltrarPor.getSelectedIndex()));
+		tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+doctor, cbxFiltrarPor.getSelectedIndex()));
 	}
 	
 	private void clean() {

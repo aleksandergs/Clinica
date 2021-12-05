@@ -343,6 +343,65 @@ public class Clinica implements Serializable{
 		}
 	}
 	
+	public void modificarVacuna(Vacuna updated) {
+		Vacuna vaccine = buscarVacuna(updated.getCodigo());
+		if(vaccine != null) {
+			vaccine.setNombre(updated.getNombre());
+			vaccine.setDosis(updated.getDosis());
+			vaccine.setEfectos(updated.getEfectos());
+			vaccine.setEnContraDe(updated.getEnContraDe());
+			vaccine.setFabricante(updated.getFabricante());
+		}
+	}
+	
+	public void modificarPaciente(Paciente updated) {
+		Paciente paciente = buscarPaciente(updated.getCedula(), updated.getFechaNacimiento());
+		if(paciente != null) {
+			paciente.setAlergias(updated.getAlergias());
+			paciente.setDireccion(updated.getDireccion());
+			paciente.setGenero(updated.getGenero());
+			paciente.setNombre(updated.getNombre());
+			paciente.setTelefono(updated.getTelefono());
+			paciente.setTipoSangre(updated.getTipoSangre());
+		}
+	}
+	
+	public boolean buscarVacunaPaciente(Paciente paci, String codigo) {
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < paci.getMisVacunas().size()) {
+			if (paci.getMisVacunas().get(i).getCodigo().equalsIgnoreCase(codigo)) {
+				encontrado = true;
+			}
+			i++;
+		}
+		return encontrado;
+	}
+	
+	public void insertarVacunaPaciente(Vacuna aux, Paciente paci) {
+		if(paci != null) {
+			paci.getMisVacunas().add(aux);
+		}
+	}
+	
+	public boolean buscarConsultaHistorial(Paciente paci, String codigo) {
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < paci.getHistoria().getMisConsultas().size()) {
+			if (paci.getHistoria().getMisConsultas().get(i).getCodConsulta().equalsIgnoreCase(codigo)) {
+				encontrado = true;
+			}
+			i++;
+		}
+		return encontrado;
+	}
+	
+	public void insertarConsultaHistorial(Consulta aux, Paciente paci) {
+		if(paci != null) {
+			paci.getHistoria().getMisConsultas().add(aux);
+		}
+	}
+	
 	public ArrayList<CitaMedica> GetCitasByMedico(Medico medico)
 	{
 		ArrayList<CitaMedica> citas = new ArrayList<>();
