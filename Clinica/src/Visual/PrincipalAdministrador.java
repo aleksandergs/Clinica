@@ -18,12 +18,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import java.awt.Font;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
@@ -33,6 +37,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PrincipalAdministrador extends JFrame {
 
@@ -80,7 +87,7 @@ public class PrincipalAdministrador extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Guardando("Clinica.dat");
+				Guardar("Clinica.dat");
 			}
 		});
 		
@@ -275,7 +282,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Salir");
 		mntmNewMenuItem_9.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Guardando("Clinica.dat");
+				Guardar("Clinica.dat");
 				Login login = new Login();
 				dispose();
 				login.setVisible(true);
@@ -283,6 +290,42 @@ public class PrincipalAdministrador extends JFrame {
 		});
 		mntmNewMenuItem_9.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuPerfil.add(mntmNewMenuItem_9);
+		
+		JMenu menuRespaldo = new JMenu("Respaldo");
+		menuRespaldo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		menuBar.add(menuRespaldo);
+		
+		JMenuItem mntmRespaldo = new JMenuItem("Crear respaldo en el servidor");
+		mntmRespaldo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!ServerConnected)
+				{
+					ServerConnected = Clinica.getInstance().ConectarServer("127.0.0.1",7000);
+					if(!ServerConnected)
+					{
+						JOptionPane.showMessageDialog(null, "No se ha podido conectar con el server", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					lblServer.setText("127.0.0.1 se encuentra conectado al server");
+				}
+				
+				try
+			    {
+					byte[] buffer = Files.readAllBytes(Paths.get("clinica.dat"));
+					Clinica.getInstance().getSalidaSocket().writeUTF("Save");
+					Clinica.getInstance().getSalidaSocket().writeUTF("respaldo.dat");
+					Clinica.getInstance().getSalidaSocket().write(buffer);
+					Clinica.getInstance().getSalidaSocket().flush();
+					JOptionPane.showMessageDialog(null, "Respaldo guardado exitosamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
+			    }
+			    catch (IOException ioe)
+			    {
+			    	System.out.println("Error: "+ioe);
+			    }
+			}
+		});
+		menuRespaldo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		menuRespaldo.add(mntmRespaldo);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -576,37 +619,21 @@ public class PrincipalAdministrador extends JFrame {
 		lblCantSecretarios.setText(String.valueOf(Clinica.getInstance().cantUsersType()[1]));
 	}
 	
-	public void Guardando(String nombre)
+	public void Guardar(String nombre)
 	{
-		if (ServerConnected)
-		{
-			try
-		    {
-				
-				Clinica.getInstance().getSalidaSocket().writeUTF("Save-"+nombre);
-				Clinica.getInstance().getSalidaSocket().flush();
-		    }
-		    catch (IOException ioe)
-		    {
-		    	System.out.println("Error: "+ioe);
-		    }
-		}
-		else
-		{
-			try {
-				FileOutputStream clinica2;
-				ObjectOutputStream clinicaWrite;
-				clinica2 = new  FileOutputStream(nombre);
-				clinicaWrite = new ObjectOutputStream(clinica2);
-				clinicaWrite.writeObject(Clinica.getInstance());
-				clinicaWrite.close();
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		try {
+			FileOutputStream clinica2;
+			ObjectOutputStream clinicaWrite;
+			clinica2 = new  FileOutputStream(nombre);
+			clinicaWrite = new ObjectOutputStream(clinica2);
+			clinicaWrite.writeObject(Clinica.getInstance());
+			clinicaWrite.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }

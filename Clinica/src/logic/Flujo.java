@@ -2,13 +2,17 @@ package logic;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Enumeration;
+
+import javax.swing.JOptionPane;
 
 import logic.Flujo;
 import logic.Servidor;
@@ -41,18 +45,25 @@ public class Flujo extends Thread{
 	    {
 	    	try
 	    	{
-	    		String input = FlujoLectura.readUTF();
-	    		if (!input.equals(""))
+	    		String command = FlujoLectura.readUTF();
+	    		if (!command.equals(""))
 	    		{
-	    			String command = input.substring(0, input.lastIndexOf('-'));
 	    			switch (command) {
 					case "Save":
-						FileOutputStream clinica;
-						ObjectOutputStream clinicaWrite;
-						clinica = new  FileOutputStream(input.substring(input.lastIndexOf('-')+1, input.length()));
-						clinicaWrite = new ObjectOutputStream(clinica);
-						clinicaWrite.writeObject(Clinica.getInstance());
-						clinicaWrite.close();
+						try
+					    {
+							String nombre = FlujoLectura.readUTF();
+							FileOutputStream clinicaWrite = new FileOutputStream(nombre);
+							byte[] buffer = new byte[FlujoLectura.available()];
+							FlujoLectura.read(buffer);
+							clinicaWrite.write(buffer);
+							clinicaWrite.close();
+							System.out.println("Respaldo guardado exitosamente!");
+					    }
+						catch (IOException ioe)
+					    {
+					    	System.out.println("Error: "+ioe);
+					    }
 						break;
 
 					default:
