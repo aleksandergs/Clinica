@@ -1,7 +1,13 @@
 package logic;
 
-public class Consulta {
+import java.io.Serializable;
+
+public class Consulta implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codConsulta;
 	private String fechaConsulta;
 	private String Sintomas;

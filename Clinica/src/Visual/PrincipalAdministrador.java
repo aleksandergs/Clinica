@@ -152,7 +152,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Registrar");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegVacunas registrarVacuna = new RegVacunas();
+				RegVacunas registrarVacuna = new RegVacunas(null);
 				registrarVacuna.setVisible(true);
 				actualizarDashboard();
 			}
@@ -255,12 +255,20 @@ public class PrincipalAdministrador extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				RegPaciente registrarPaciente = new RegPaciente(null);
 				registrarPaciente.setVisible(true);
+				actualizarDashboard();
 			}
 		});
 		mntmNewMenuItem_13.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuPacientes.add(mntmNewMenuItem_13);
 		
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Listado");
+		mntmNewMenuItem_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ListPaciente listarPacientes = new ListPaciente();
+				listarPacientes.setVisible(true);
+				actualizarDashboard();
+			}
+		});
 		mntmNewMenuItem_6.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuPacientes.add(mntmNewMenuItem_6);
 		
@@ -500,6 +508,8 @@ public class PrincipalAdministrador extends JFrame {
 		btnPacientes = new JButton("Ver Pacientes ->");
 		btnPacientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ListPaciente listarPacientes = new ListPaciente();
+				listarPacientes.setVisible(true);
 				actualizarDashboard();
 			}
 		});

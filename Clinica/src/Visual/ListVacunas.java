@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import logic.Clinica;
+import logic.Medico;
 import logic.Vacuna;
 
 import javax.swing.JScrollPane;
@@ -35,13 +36,16 @@ public class ListVacunas extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
-	private String[][] tableData = {};
-	Vacuna selected = null;
+	private DefaultTableModel model;
+	private Object[] rows;
+	private Vacuna selected = null;
+	private Vacuna vaccineAgregar = null;
 	private JScrollPane scrollPane;
 	private JPanel panel;
 	private JTextArea textArea;
 	private JComboBox cbxFiltro;
 	private JTextField txtFiltro;
+	private JButton btnModificar;
 
 	/**
 	 * Launch the application.
@@ -69,8 +73,6 @@ public class ListVacunas extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		String[] columnVac = { "Codigo", "Nombre", "dosis", "Contra", "Fabricante"};
-		llenarTabla();
 		contentPanel.setLayout(null);
 		{
 			panel = new JPanel();
@@ -93,11 +95,18 @@ public class ListVacunas extends JDialog {
 								String codigo = (String) table.getValueAt(aux, 0);
 								selected = Clinica.getInstance().buscarVacuna(codigo);
 								textArea.setText(selected.getEfectos());
+								btnModificar.setEnabled(true);
+							}
+							else {
+								btnModificar.setEnabled(false);
 							}
 						}
 					});
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					table.setModel(new DefaultTableModel(tableData, columnVac));
+					String[] columnVac = { "Codigo", "Nombre", "dosis", "Contra", "Fabricante"};
+					model = new DefaultTableModel();
+					model.setColumnIdentifiers(columnVac);
+					table.setModel(model);
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -146,8 +155,30 @@ public class ListVacunas extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnModificar = new JButton("Modificar");
+				btnModificar = new JButton("");
+				if(Clinica.getLoginUser() instanceof Medico) {
+					btnModificar.setText("Agregar");
+				}
+				else {
+					btnModificar.setText("Modificar");
+				}
 				btnModificar.setEnabled(false);
+				btnModificar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if(Clinica.getLoginUser() instanceof Medico) {
+							vaccineAgregar = selected;
+							dispose();
+						}
+						else {
+							RegVacunas modVacunas = new RegVacunas(selected);
+							setAlwaysOnTop(false);
+							modVacunas.setVisible(true);
+							setAlwaysOnTop(true);
+							llenarTabla();
+							btnModificar.setEnabled(false);
+						}
+					}
+				});
 				btnModificar.setActionCommand("OK");
 				buttonPane.add(btnModificar);
 				getRootPane().setDefaultButton(btnModificar);
@@ -155,7 +186,7 @@ public class ListVacunas extends JDialog {
 			{
 				JButton cancelButton = new JButton("Cancelar");
 				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
+					public void actionPerformed(ActionEvent arg0) {
 						dispose();
 					}
 				});
@@ -163,23 +194,26 @@ public class ListVacunas extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		llenarTabla();
 	}
 	
 	private void llenarTabla()
 	{
-		int cantVac = Clinica.getInstance().getMisVacunas().size();
-		tableData = new String[cantVac][5];
-		int vac = 0;
+		model.setRowCount(0);
+		rows = new Object[model.getColumnCount()];
 		//{ "Codigo", "Nombre", "dosis", "Contra", "Fabricante"}
 		for (Vacuna v : Clinica.getInstance().getMisVacunas())
 		{
-			tableData[vac][0] = v.getCodigo();
-			tableData[vac][1] = v.getNombre();	
-			tableData[vac][2] = Integer.toString(v.getDosis());
-			tableData[vac][3] = v.getEnContraDe();
-			tableData[vac][4] = v.getFabricante();
-			vac++;
-
+			rows[0] = v.getCodigo();
+			rows[1] = v.getNombre();	
+			rows[2] = Integer.toString(v.getDosis());
+			rows[3] = v.getEnContraDe();
+			model.addRow(rows);
 		}
+		textArea.setText("");
+	}
+	
+	public Vacuna getVaccineAgregar() {
+		return vaccineAgregar;
 	}
 }
