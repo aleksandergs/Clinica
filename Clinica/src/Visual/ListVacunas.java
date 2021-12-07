@@ -42,10 +42,10 @@ public class ListVacunas extends JDialog {
 	private Vacuna vaccineAgregar = null;
 	private JScrollPane scrollPane;
 	private JPanel panel;
-	private JTextArea textArea;
 	private JComboBox cbxFiltro;
 	private JTextField txtFiltro;
 	private JButton btnModificar;
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -131,7 +131,7 @@ public class ListVacunas extends JDialog {
 						TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
 						table.setRowSorter(tsr);
 						int columnFilter = (cbxFiltro.getSelectedIndex() < 2) ? cbxFiltro.getSelectedIndex() : (cbxFiltro.getSelectedIndex() + 1);
-						tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, columnFilter));
+						tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, columnFilter));
 					}
 				});
 				txtFiltro.setBounds(186, 20, 196, 20);
@@ -146,9 +146,11 @@ public class ListVacunas extends JDialog {
 		contentPanel.add(panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		panel_1.add(scrollPane_1, BorderLayout.CENTER);
+		
 		textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		panel_1.add(textArea, BorderLayout.CENTER);
+		scrollPane_1.setViewportView(textArea);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -208,9 +210,9 @@ public class ListVacunas extends JDialog {
 			rows[1] = v.getNombre();	
 			rows[2] = Integer.toString(v.getDosis());
 			rows[3] = v.getEnContraDe();
+			rows[4] = v.getFabricante();
 			model.addRow(rows);
 		}
-		textArea.setText("");
 	}
 	
 	public Vacuna getVaccineAgregar() {

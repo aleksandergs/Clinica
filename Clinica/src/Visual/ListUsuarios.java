@@ -165,10 +165,12 @@ public class ListUsuarios extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				String filter = txtFilter.getText();
-				DefaultTableModel model = (DefaultTableModel)table.getModel();
-				TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
+				TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(modelTable);
+				TableRowSorter<DefaultTableModel> tsr1 = new TableRowSorter<DefaultTableModel>(modelTable1);
 				table.setRowSorter(tsr);
-				tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFilter.getSelectedIndex()));
+				table1.setRowSorter(tsr1);
+				tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, cbxFilter.getSelectedIndex()));
+				tsr1.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, cbxFilter.getSelectedIndex()));
 			}
 		});
 		txtFilter.setBounds(186, 14, 196, 20);

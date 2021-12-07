@@ -124,7 +124,7 @@ public class ListCitaMedica extends JDialog {
 					TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
 					table.setRowSorter(tsr);
 					
-					tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFiltro.getSelectedIndex()));
+					tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, cbxFiltro.getSelectedIndex()));
 				}
 			});
 			txtFiltro.setBounds(174, 21, 196, 20);

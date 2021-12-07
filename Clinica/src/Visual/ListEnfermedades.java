@@ -129,7 +129,7 @@ public class ListEnfermedades extends JDialog {
 					TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
 					table.setRowSorter(tsr);
 					
-					tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFiltro.getSelectedIndex()));
+					tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, cbxFiltro.getSelectedIndex()));
 				}
 			});
 			txtFiltro.setBounds(180, 20, 196, 20);
