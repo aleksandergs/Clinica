@@ -11,10 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import logic.Clinica;
 import logic.Enfermedad;
@@ -24,6 +26,12 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ListEnfermedades extends JDialog {
 
@@ -38,6 +46,8 @@ public class ListEnfermedades extends JDialog {
 	private JScrollPane scrollPane_1;
 	private JTextArea textArea;
 	private JButton btnModificar;
+	private JTextField txtFiltro;
+	private JComboBox cbxFiltro;
 
 	/**
 	 * Launch the application.
@@ -69,14 +79,15 @@ public class ListEnfermedades extends JDialog {
 		String[] columnEnf = { "Codigo", "Nombre", "Tipo"};
 		{
 			panel = new JPanel();
-			panel.setBorder(new TitledBorder(null, "Administradores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Enfermedades", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			panel.setBounds(10, 10, 668, 424);
 			contentPanel.add(panel);
-			panel.setLayout(new BorderLayout(0, 0));
+			panel.setLayout(null);
 			
 			scrollPane = new JScrollPane();
+			scrollPane.setBounds(6, 48, 656, 368);
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			panel.add(scrollPane, BorderLayout.CENTER);
+			panel.add(scrollPane);
 			
 			table = new JTable();
 			table.addMouseListener(new MouseAdapter() {
@@ -99,6 +110,31 @@ public class ListEnfermedades extends JDialog {
 			model.setColumnIdentifiers(columnEnf);
 			table.setModel(model);
 			scrollPane.setViewportView(table);
+			
+			JLabel lblFitro = new JLabel("Buscar por:");
+			lblFitro.setBounds(6, 22, 72, 14);
+			panel.add(lblFitro);
+			
+			cbxFiltro = new JComboBox();
+			cbxFiltro.setModel(new DefaultComboBoxModel(new String[] {"Codigo", "Nombre", "Tipo"}));
+			cbxFiltro.setBounds(88, 18, 82, 24);
+			panel.add(cbxFiltro);
+			
+			txtFiltro = new JTextField();
+			txtFiltro.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String filter = txtFiltro.getText();
+					DefaultTableModel model = (DefaultTableModel)table.getModel();
+					TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
+					table.setRowSorter(tsr);
+					
+					tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFiltro.getSelectedIndex()));
+				}
+			});
+			txtFiltro.setBounds(180, 20, 196, 20);
+			panel.add(txtFiltro);
+			txtFiltro.setColumns(10);
 		}
 		
 		JPanel panel_1 = new JPanel();
@@ -165,7 +201,6 @@ public class ListEnfermedades extends JDialog {
 	{
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
-		//{ "Codigo", "Nombre", "Tipo", "Diagnostico" }
 		for (Enfermedad e : Clinica.getInstance().getMisEnfermedades()) 
 		{
 			rows[0] = e.getCodigo(); 

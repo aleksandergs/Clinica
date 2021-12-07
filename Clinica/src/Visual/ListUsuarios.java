@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import logic.Administrador;
 import logic.Clinica;
@@ -21,10 +22,17 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ListUsuarios extends JDialog {
 
@@ -42,6 +50,9 @@ public class ListUsuarios extends JDialog {
 	private JTable table1;
 	private Usuario selected = null;
 	private JButton btnModificar;
+	private JLabel lblFilter;
+	private JComboBox cbxFilter;
+	private JTextField txtFilter;
 
 	/**
 	 * Launch the application.
@@ -64,7 +75,7 @@ public class ListUsuarios extends JDialog {
 		setResizable(false);
 		setModal(true);
 		setAlwaysOnTop(true);
-		setBounds(100, 100, 936, 688);
+		setBounds(100, 100, 936, 720);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,7 +86,7 @@ public class ListUsuarios extends JDialog {
 		{
 			panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "Administradores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel.setBounds(10, 10, 900, 292);
+			panel.setBounds(10, 42, 900, 292);
 			contentPanel.add(panel);
 			panel.setLayout(new BorderLayout(0, 0));
 			
@@ -108,7 +119,7 @@ public class ListUsuarios extends JDialog {
 		{
 			panel1 = new JPanel();
 			panel1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "M\u00E9dicos", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panel1.setBounds(10, 310, 900, 292);
+			panel1.setBounds(10, 342, 900, 292);
 			contentPanel.add(panel1);
 			panel1.setLayout(new BorderLayout(0, 0));
 			
@@ -139,6 +150,30 @@ public class ListUsuarios extends JDialog {
 			table1.setModel(modelTable1);
 			scrollPane_1.setViewportView(table1);
 		}
+		
+		lblFilter = new JLabel("Buscar por:");
+		lblFilter.setBounds(10, 17, 82, 14);
+		contentPanel.add(lblFilter);
+		
+		cbxFilter = new JComboBox();
+		cbxFilter.setModel(new DefaultComboBoxModel(new String[] {"Codigo", "Cedula", "Nombre"}));
+		cbxFilter.setBounds(80, 12, 96, 24);
+		contentPanel.add(cbxFilter);
+		
+		txtFilter = new JTextField();
+		txtFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String filter = txtFilter.getText();
+				DefaultTableModel model = (DefaultTableModel)table.getModel();
+				TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
+				table.setRowSorter(tsr);
+				tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFilter.getSelectedIndex()));
+			}
+		});
+		txtFilter.setBounds(186, 14, 196, 20);
+		contentPanel.add(txtFilter);
+		txtFilter.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));

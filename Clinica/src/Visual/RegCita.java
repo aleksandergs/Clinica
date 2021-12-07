@@ -236,7 +236,7 @@ public class RegCita extends JDialog {
 		cbxHorario = new JComboBox();
 		cbxHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				habilitarBoton();
 			}
 		});
 		cbxHorario.setFont(new Font("Tahoma", Font.PLAIN, 11));

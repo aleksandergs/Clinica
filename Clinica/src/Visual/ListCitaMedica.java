@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import logic.Administrador;
 import logic.CitaMedica;
@@ -23,9 +24,16 @@ import logic.Vacuna;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ListCitaMedica extends JDialog {
 
@@ -34,6 +42,8 @@ public class ListCitaMedica extends JDialog {
 	private String[][] tableData = {};
 	CitaMedica selected = null;
 	private JButton btnModificar;
+	private JComboBox cbxFiltro;
+	private JTextField txtFiltro;
 
 	/**
 	 * Launch the application.
@@ -59,19 +69,20 @@ public class ListCitaMedica extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		String[] columnCM0 = { "Codigo", "Fecha", "Nombre", "Telefono"};
-		String[] columnCM1 = { "Codigo", "Fecha", "Nombre", "Telefono", "Medico"};
+		String[] columnCM0 = { "Codigo", "Nombre", "Fecha", "Telefono"};
+		String[] columnCM1 = { "Codigo", "Nombre", "Fecha", "Telefono", "Medico"};
 		llenarTabla(usuario);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "Citas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			contentPanel.add(panel, BorderLayout.CENTER);
-			panel.setLayout(new BorderLayout(0, 0));
+			panel.setLayout(null);
 			{
 				JScrollPane scrollPane = new JScrollPane();
+				scrollPane.setBounds(6, 50, 882, 578);
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-				panel.add(scrollPane, BorderLayout.CENTER);
+				panel.add(scrollPane);
 				{
 					table = new JTable();
 					table.addMouseListener(new MouseAdapter() {
@@ -94,6 +105,31 @@ public class ListCitaMedica extends JDialog {
 					scrollPane.setViewportView(table);
 				}
 			}
+			
+			JLabel lblBuscar = new JLabel("Buscar por:");
+			lblBuscar.setBounds(10, 24, 68, 14);
+			panel.add(lblBuscar);
+			
+			cbxFiltro = new JComboBox();
+			cbxFiltro.setModel(new DefaultComboBoxModel(new String[] {"Codigo", "Nombre", "Fecha"}));
+			cbxFiltro.setBounds(82, 20, 82, 24);
+			panel.add(cbxFiltro);
+			
+			txtFiltro = new JTextField();
+			txtFiltro.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					String filter = txtFiltro.getText();
+					DefaultTableModel model = (DefaultTableModel)table.getModel();
+					TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
+					table.setRowSorter(tsr);
+					
+					tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFiltro.getSelectedIndex()));
+				}
+			});
+			txtFiltro.setBounds(174, 21, 196, 20);
+			panel.add(txtFiltro);
+			txtFiltro.setColumns(10);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -141,8 +177,8 @@ public class ListCitaMedica extends JDialog {
 			for (CitaMedica c : citasMedicas)
 			{
 				tableData[citas][0] = c.getCodigo();
-				tableData[citas][1] = c.getFecha();	
-				tableData[citas][2] = c.getNombrePersona();
+				tableData[citas][1] = c.getNombrePersona();
+				tableData[citas][2] = c.getFecha();
 				tableData[citas][3] = c.getNumeroPersona();
 				citas++;
 			}
@@ -155,13 +191,12 @@ public class ListCitaMedica extends JDialog {
 			for (CitaMedica c : Clinica.getInstance().getMisCitas())
 			{
 				tableData[citas][0] = c.getCodigo();
-				tableData[citas][1] = c.getFecha();	
-				tableData[citas][2] = c.getNombrePersona();
+				tableData[citas][1] = c.getNombrePersona();
+				tableData[citas][2] = c.getFecha();
 				tableData[citas][3] = c.getNumeroPersona();
 				tableData[citas][4] = c.getMedico().getCodigoUsuario() + ":" +c.getMedico().getNombre();
 				citas++;
 			}
 		}
 	}
-
 }
