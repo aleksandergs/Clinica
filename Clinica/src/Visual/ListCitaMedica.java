@@ -151,14 +151,15 @@ public class ListCitaMedica extends JDialog {
 							dialog.setVisible(true);
 							llenarTabla();
 							btnModificar.setEnabled(false);
+							btnEliminar.setEnabled(false);
 						}
 						else {
-							
 							ListPaciente dialog = new ListPaciente(selected.getNombrePersona());
 							dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 							dialog.setVisible(true);
 							llenarTabla();
 							btnModificar.setEnabled(false);
+							btnEliminar.setEnabled(false);
 						}
 					}
 				});
