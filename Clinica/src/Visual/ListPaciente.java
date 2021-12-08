@@ -80,7 +80,7 @@ public class ListPaciente extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ListPaciente dialog = new ListPaciente();
+			ListPaciente dialog = new ListPaciente("");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -91,7 +91,8 @@ public class ListPaciente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListPaciente() {
+	public ListPaciente(String paci) {
+		setModal(true);
 		setBounds(100, 100, 700, 575);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -549,6 +550,11 @@ public class ListPaciente extends JDialog {
 			}
 		}
 		loadPacientes();
+		if(paci != "") {
+			txtFiltro.setText(paci);
+			cbxFiltrarPor.setSelectedIndex(1);
+			filter(txtFiltro.getText());
+		}
 	}
 	
 	public void loadPacientes() {
@@ -632,4 +638,5 @@ public class ListPaciente extends JDialog {
 		tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+query, cbxFiltrarPor.getSelectedIndex()));
 	}
 }
+
 

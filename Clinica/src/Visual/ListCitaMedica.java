@@ -18,8 +18,6 @@ import logic.Administrador;
 import logic.CitaMedica;
 import logic.Clinica;
 import logic.Medico;
-import logic.Usuario;
-import logic.Vacuna;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,6 +27,7 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
@@ -39,18 +38,20 @@ public class ListCitaMedica extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
-	private String[][] tableData = {};
+	private DefaultTableModel model;
+	private Object[] rows;
 	CitaMedica selected = null;
 	private JButton btnModificar;
 	private JComboBox cbxFiltro;
 	private JTextField txtFiltro;
+	private JButton btnEliminar;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ListCitaMedica dialog = new ListCitaMedica(null);
+			ListCitaMedica dialog = new ListCitaMedica();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -61,7 +62,7 @@ public class ListCitaMedica extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListCitaMedica(Usuario usuario) {
+	public ListCitaMedica() {
 		setTitle("Listado de Citas Medicas");
 		setModal(true);
 		setBounds(100, 100, 920, 720);
@@ -69,9 +70,6 @@ public class ListCitaMedica extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		String[] columnCM0 = { "Codigo", "Nombre", "Fecha", "Telefono"};
-		String[] columnCM1 = { "Codigo", "Nombre", "Fecha", "Telefono", "Medico"};
-		llenarTabla(usuario);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JPanel panel = new JPanel();
@@ -92,16 +90,17 @@ public class ListCitaMedica extends JDialog {
 							if(aux != -1) {
 								String codigo = (String) table.getValueAt(aux, 0);
 								selected = Clinica.getInstance().buscarCita(codigo);
-								if((usuario instanceof Administrador) && ((Administrador)usuario).getPuestoLaboral().equalsIgnoreCase("Secretario"))
+								if((Clinica.getLoginUser() instanceof Administrador) && ((Administrador)Clinica.getLoginUser()).getPuestoLaboral().equalsIgnoreCase("Secretario") || Clinica.getLoginUser() instanceof Medico)
 									btnModificar.setEnabled(true);
+									btnEliminar.setEnabled(true);
 							}
 						}
 					});
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					if(usuario instanceof Medico)
-						table.setModel(new DefaultTableModel(tableData, columnCM0));
-					else
-						table.setModel(new DefaultTableModel(tableData, columnCM1));
+					String[] columnCM1 = { "Codigo", "Nombre", "Fecha", "Telefono", "Medico"};
+					model = new DefaultTableModel();
+					model.setColumnIdentifiers(columnCM1);
+					table.setModel(model);
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -111,7 +110,7 @@ public class ListCitaMedica extends JDialog {
 			panel.add(lblBuscar);
 			
 			cbxFiltro = new JComboBox();
-			cbxFiltro.setModel(new DefaultComboBoxModel(new String[] {"Codigo", "Nombre", "Fecha"}));
+			cbxFiltro.setModel(new DefaultComboBoxModel(new String[] {"Codigo", "Nombre", "Fecha", "Telefono", "Medico"}));
 			cbxFiltro.setBounds(82, 20, 82, 24);
 			panel.add(cbxFiltro);
 			
@@ -136,20 +135,52 @@ public class ListCitaMedica extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnModificar = new JButton("Modificar");
+				btnModificar = new JButton("");
+				if(Clinica.getLoginUser() instanceof Medico) {
+					btnModificar.setText("Buscar Paciente");
+				}
+				else {
+					btnModificar.setText("Modificar");
+				}
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						RegCita dialog = new RegCita(selected);
-						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						dialog.setVisible(true);
-						llenarTabla(usuario);
-						DefaultTableModel model = (DefaultTableModel) table.getModel();
-						if(usuario instanceof Medico)
-							model.setDataVector(tableData, columnCM0);
-						else
-							model.setDataVector(tableData, columnCM1);
+						if(Clinica.getLoginUser() instanceof Administrador)
+						{
+							RegCita dialog = new RegCita(selected);
+							dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							dialog.setVisible(true);
+							llenarTabla();
+							btnModificar.setEnabled(false);
+						}
+						else {
+							
+							ListPaciente dialog = new ListPaciente(selected.getNombrePersona());
+							dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+							dialog.setVisible(true);
+							llenarTabla();
+							btnModificar.setEnabled(false);
+						}
 					}
 				});
+				{
+					btnEliminar = new JButton("Eliminar");
+					btnEliminar.setEnabled(false);
+					btnEliminar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							if(selected != null) {
+								int dialogButton = JOptionPane.YES_NO_OPTION;
+								int dialogResult = JOptionPane.showConfirmDialog (null, "¿Esta seguro que desea eliminar la cita medica "+selected.getCodigo()+" ?","Confirmar",dialogButton);
+								if(dialogResult == JOptionPane.YES_OPTION){
+									Clinica.getInstance().deleteCita(selected.getCodigo());
+									JOptionPane.showMessageDialog(null, "Eliminacion Satisfactorio", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+									btnEliminar.setEnabled(false);
+									llenarTabla();
+								}
+							}
+						}
+					});
+					buttonPane.add(btnEliminar);
+				}
 				btnModificar.setEnabled(false);
 				btnModificar.setActionCommand("OK");
 				buttonPane.add(btnModificar);
@@ -165,38 +196,39 @@ public class ListCitaMedica extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		llenarTabla();
 	}
 	
-	private void llenarTabla(Usuario usuario)
+	private void llenarTabla()
 	{
-		if(usuario instanceof Medico)
+		model.setRowCount(0);
+		rows = new Object[model.getColumnCount()];
+		if(Clinica.getLoginUser() instanceof Medico)
 		{
-			ArrayList<CitaMedica> citasMedicas = Clinica.getInstance().GetCitasByMedico((Medico)usuario);
-			tableData = new String[citasMedicas.size()][4];
-			int citas = 0;
-			for (CitaMedica c : citasMedicas)
+			ArrayList<CitaMedica> misCitas = Clinica.getInstance().GetCitasByMedico();
+			for (CitaMedica citas : misCitas)
 			{
-				tableData[citas][0] = c.getCodigo();
-				tableData[citas][1] = c.getNombrePersona();
-				tableData[citas][2] = c.getFecha();
-				tableData[citas][3] = c.getNumeroPersona();
-				citas++;
+					rows[0] = citas.getCodigo();
+					rows[1] = citas.getNombrePersona();	
+					rows[2] = citas.getFecha();
+					rows[3] = citas.getNumeroPersona();
+					rows[4] = citas.getMedico().getCodigoUsuario() + ":" +citas.getMedico().getNombre();
+					model.addRow(rows);
 			}
 		}
 		else
 		{
-			int cantCitas = Clinica.getInstance().getMisCitas().size();
-			tableData = new String[cantCitas][5];
-			int citas = 0;
-			for (CitaMedica c : Clinica.getInstance().getMisCitas())
+			for (CitaMedica citas : Clinica.getInstance().getMisCitas())
 			{
-				tableData[citas][0] = c.getCodigo();
-				tableData[citas][1] = c.getNombrePersona();
-				tableData[citas][2] = c.getFecha();
-				tableData[citas][3] = c.getNumeroPersona();
-				tableData[citas][4] = c.getMedico().getCodigoUsuario() + ":" +c.getMedico().getNombre();
-				citas++;
+				rows[0] = citas.getCodigo();
+				rows[1] = citas.getNombrePersona();	
+				rows[2] = citas.getFecha();
+				rows[3] = citas.getNumeroPersona();
+				rows[4] = citas.getMedico().getCodigoUsuario() + ":" +citas.getMedico().getNombre();
+				model.addRow(rows);
 			}
 		}
+		btnModificar.setEnabled(false);
 	}
 }
+

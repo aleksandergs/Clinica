@@ -23,11 +23,9 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
@@ -38,7 +36,6 @@ import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class PrincipalAdministrador extends JFrame {
@@ -230,13 +227,17 @@ public class PrincipalAdministrador extends JFrame {
 		});
 		mntmNewMenuItem_8.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		menuCitasMed.add(mntmNewMenuItem_8);
+		if(Clinica.getLoginUser() instanceof Medico) {
+			mntmNewMenuItem_8.setVisible(false);
+		}
 		
 		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Listado");
 		mntmNewMenuItem_10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListCitaMedica dialog = new ListCitaMedica(Clinica.getLoginUser());
+				ListCitaMedica dialog = new ListCitaMedica();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
+				actualizarDashboard();
 			}
 		});
 		mntmNewMenuItem_10.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -264,7 +265,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Listado");
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ListPaciente listarPacientes = new ListPaciente();
+				ListPaciente listarPacientes = new ListPaciente("");
 				listarPacientes.setVisible(true);
 				actualizarDashboard();
 			}
@@ -508,7 +509,7 @@ public class PrincipalAdministrador extends JFrame {
 		btnPacientes = new JButton("Ver Pacientes ->");
 		btnPacientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ListPaciente listarPacientes = new ListPaciente();
+				ListPaciente listarPacientes = new ListPaciente("");
 				listarPacientes.setVisible(true);
 				actualizarDashboard();
 			}
@@ -536,10 +537,6 @@ public class PrincipalAdministrador extends JFrame {
 		lblCantCitas.setForeground(Color.BLACK);
 		lblCantCitas.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblCantCitas.setBounds(0, 57, 240, 33);
-		if(Clinica.getLoginUser() instanceof Medico)
-			lblCantCitas.setText(String.valueOf(Clinica.getInstance().GetCitasByMedico((Medico)Clinica.getLoginUser()).size()));
-		else
-			lblCantCitas.setText(String.valueOf(Clinica.getInstance().getMisCitas().size()));
 		panelCitas.add(lblCantCitas);
 		
 		JLabel lblCantidadDeCitas = new JLabel("Cantidad de Citas Medicas registradas");
@@ -551,10 +548,10 @@ public class PrincipalAdministrador extends JFrame {
 		btnVerCitasMedicas = new JButton("Ver Citas Medicas ->");
 		btnVerCitasMedicas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				actualizarDashboard();
-				ListCitaMedica dialog = new ListCitaMedica(Clinica.getLoginUser());
+				ListCitaMedica dialog = new ListCitaMedica();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
+				actualizarDashboard();
 			}
 		});
 		btnVerCitasMedicas.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -618,11 +615,15 @@ public class PrincipalAdministrador extends JFrame {
 		btnVerEnfermedades.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnVerEnfermedades.setBounds(0, 98, 240, 23);
 		panelEnfermedades.add(btnVerEnfermedades);
+		actualizarDashboard();
 	}
 	
 	public void actualizarDashboard() {
 		lblCantEnfermedades.setText(String.valueOf(Clinica.getInstance().getMisEnfermedades().size()));
-		lblCantCitas.setText(String.valueOf(Clinica.getInstance().getMisCitas().size()));
+		if(Clinica.getLoginUser() instanceof Medico)
+			lblCantCitas.setText(String.valueOf(Clinica.getInstance().GetCitasByMedico().size()));
+		else
+			lblCantCitas.setText(String.valueOf(Clinica.getInstance().getMisCitas().size()));
 		lblCantPacientes.setText(String.valueOf(Clinica.getInstance().getMisPacientes().size()));
 		lblCantDoctores.setText(String.valueOf(Clinica.getInstance().cantUsersType()[2]));
 		lblCantAdministradores.setText(String.valueOf(Clinica.getInstance().cantUsersType()[0]));

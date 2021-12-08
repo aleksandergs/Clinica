@@ -58,10 +58,10 @@ public class RegCita extends JDialog {
 	private JFormattedTextField txtTelefono;
 	private JSpinner spnFecha;
 	private JComboBox cbxHorario;
-	private JButton btnRegistrar;
-	private JLabel lblAvisoNombre;
-	private JLabel lblAvisoTelefono;
-	private JLabel lblAvisoDoctor;
+	private JButton btnRegistrar = new JButton("");
+	private JLabel lblAvisoNombre = new JLabel("");
+	private JLabel lblAvisoTelefono = new JLabel("");
+	private JLabel lblAvisoDoctor = new JLabel("");
 	private CitaMedica updated = null;
 
 	/**
@@ -212,19 +212,16 @@ public class RegCita extends JDialog {
 		}
 		panel.add(spnFecha);
 		
-		lblAvisoNombre = new JLabel("");
 		lblAvisoNombre.setForeground(Color.RED);
 		lblAvisoNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoNombre.setBounds(432, 54, 18, 14);
 		panel.add(lblAvisoNombre);
 		
-		lblAvisoTelefono = new JLabel("");
 		lblAvisoTelefono.setForeground(Color.RED);
 		lblAvisoTelefono.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoTelefono.setBounds(280, 84, 18, 14);
 		panel.add(lblAvisoTelefono);
-		
-		lblAvisoDoctor = new JLabel("");
+
 		lblAvisoDoctor.setForeground(Color.RED);
 		lblAvisoDoctor.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblAvisoDoctor.setBounds(432, 144, 18, 14);
@@ -246,8 +243,8 @@ public class RegCita extends JDialog {
 		cbxHorario.setModel(new DefaultComboBoxModel(new String[] {"08:00 - 08:30", "08:30 - 09:00", "09:00 - 09:30", "09:30 - 10:00", "10:00 - 10:30", "10:30 - 11:00", "11:00 - 11:30", "11:30 - 12:00", "12:00 - 12:30", "12:30 - 13:00", "13:00 - 13:30", "13:30 - 14:00", "14:00 - 14:30", "14:30 - 15:00", "15:00 - 15:30", "15:30 - 16:00", "16:00 - 16:30", "16:30 - 17:00", "17:00 - 17:30", "17:30 - 18:00", "19:00 - 19:30", "19:30 - 20:00"}));
 		cbxHorario.setBounds(290, 114, 138, 23);
 		if(updated != null) {
-			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-			String fecha = formatter.format(updated.getFecha());
+			String fecha = updated.getFecha().substring(11, 24);
+			System.out.println(fecha);
 			cbxHorario.setSelectedItem(fecha);
 		}
 		panel.add(cbxHorario);
@@ -311,7 +308,6 @@ public class RegCita extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("");
 				if(updated == null){
 					btnRegistrar.setText("Registrar");
 				}else {
@@ -319,7 +315,7 @@ public class RegCita extends JDialog {
 				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						String horario = cbxHorario.getSelectedItem().toString().substring(0, cbxHorario.getSelectedItem().toString().indexOf("-"));
+						String horario = cbxHorario.getSelectedItem().toString();
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 						String fechacita = sdf.format(spnFecha.getValue())+" "+horario;
 						SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");

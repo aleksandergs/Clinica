@@ -402,12 +402,12 @@ public class Clinica implements Serializable{
 		}
 	}
 	
-	public ArrayList<CitaMedica> GetCitasByMedico(Medico medico)
+	public ArrayList<CitaMedica> GetCitasByMedico()
 	{
 		ArrayList<CitaMedica> citas = new ArrayList<>();
 		for(CitaMedica citaMedica : misCitas)
 		{
-			if(citaMedica.getMedico().getCodigoUsuario() == medico.getCodigoUsuario())
+			if(citaMedica.getMedico().getCodigoUsuario() == loginUser.getCodigoUsuario())
 				citas.add(citaMedica);
 		}
 		return citas;
@@ -444,5 +444,28 @@ public class Clinica implements Serializable{
 
 	public static Socket getSfd() {
 		return sfd;
+	}
+	
+	public int findIndcita(String codCita) {
+		boolean find = false;
+		int i=0, indice = -1;
+		while(i<misCitas.size() && !find) {
+			if(misCitas.get(i).getCodigo().equalsIgnoreCase(codCita)){
+				indice = i;
+				find = true;
+			}
+			i++;
+		}
+		return indice;
+	}
+	
+	public boolean deleteCita(String codCita) {
+		int indCita = findIndcita(codCita);
+		boolean delete = false;
+		if(indCita != -1) {
+			misCitas.remove(indCita);
+			delete = true;
+		}
+		return delete;
 	}
 }
