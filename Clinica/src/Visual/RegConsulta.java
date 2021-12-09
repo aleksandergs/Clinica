@@ -151,6 +151,7 @@ public class RegConsulta extends JDialog {
 			panel.add(scrollPane);
 			
 			txtSintomas = new JTextArea();
+			txtSintomas.setLineWrap(true);
 			scrollPane.setViewportView(txtSintomas);
 			if(updated != null) {
 				txtSintomas.setText(updated.getSintomas());
@@ -159,6 +160,7 @@ public class RegConsulta extends JDialog {
 			JScrollPane scrollPane_1 = new JScrollPane();
 			scrollPane_1.setBounds(262, 169, 200, 179);
 			panel.add(scrollPane_1);
+			txtDiagnostico.setLineWrap(true);
 			
 			txtDiagnostico.addKeyListener(new KeyAdapter() {
 				@Override
