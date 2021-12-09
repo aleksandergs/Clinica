@@ -334,8 +334,16 @@ public class PrincipalAdministrador extends JFrame {
 			    }
 			}
 		});
+		menuRespaldo.setVisible(false);
 		menuRespaldo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		if(Clinica.getLoginUser() instanceof Administrador) {
+			Administrador admin = (Administrador)Clinica.getLoginUser();
+			if(admin.getPuestoLaboral().equalsIgnoreCase("Administrador")) {
+				menuRespaldo.setVisible(true);
+			}
+		}
 		menuRespaldo.add(mntmRespaldo);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
