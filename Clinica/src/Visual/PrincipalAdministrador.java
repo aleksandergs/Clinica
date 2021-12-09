@@ -307,6 +307,7 @@ public class PrincipalAdministrador extends JFrame {
 		JMenuItem mntmRespaldo = new JMenuItem("Crear respaldo en el servidor");
 		mntmRespaldo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Guardar("clinica.dat");
 				if(!ServerConnected)
 				{
 					ServerConnected = Clinica.getInstance().ConectarServer("127.0.0.1",7000);
