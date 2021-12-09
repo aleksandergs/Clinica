@@ -299,6 +299,7 @@ public class ListPaciente extends JDialog {
 				panel_3.add(scrollPane_4, BorderLayout.CENTER);
 				
 				txtDiagHistorial = new JTextArea();
+				txtDiagHistorial.setLineWrap(true);
 				scrollPane_4.setViewportView(txtDiagHistorial);
 				tabbedPane.setEnabledAt(1, false);
 			}
@@ -365,6 +366,7 @@ public class ListPaciente extends JDialog {
 				panel_1.add(scrollPane_3, BorderLayout.CENTER);
 				
 				txtDiagConsulta = new JTextArea();
+				txtDiagConsulta.setLineWrap(true);
 				scrollPane_3.setViewportView(txtDiagConsulta);
 				
 				JPanel panel_3 = new JPanel();
@@ -377,6 +379,7 @@ public class ListPaciente extends JDialog {
 				panel_3.add(scrollPane_4, BorderLayout.CENTER);
 				
 				txtSintConsul = new JTextArea();
+				txtSintConsul.setLineWrap(true);
 				scrollPane_4.setViewportView(txtSintConsul);
 				tabbedPane.setEnabledAt(2, false);
 			}
@@ -439,6 +442,7 @@ public class ListPaciente extends JDialog {
 				panel_1.add(scrollPane_3, BorderLayout.CENTER);
 				
 				txtEfectos = new JTextArea();
+				txtEfectos.setLineWrap(true);
 				scrollPane_3.setViewportView(txtEfectos);
 				tabbedPane.setEnabledAt(3, false);
 			}
