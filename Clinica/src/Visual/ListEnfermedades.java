@@ -41,8 +41,7 @@ public class ListEnfermedades extends JDialog {
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private JTable table;
-	Enfermedad selected = null;
-	private Enfermedad enfAgregar = null;
+	private Enfermedad selected = null;
 	private JScrollPane scrollPane_1;
 	private JTextArea textArea;
 	private JButton btnModificar;
@@ -129,7 +128,7 @@ public class ListEnfermedades extends JDialog {
 					TableRowSorter<DefaultTableModel> tsr = new TableRowSorter<DefaultTableModel>(model);
 					table.setRowSorter(tsr);
 					
-					tsr.setRowFilter(RowFilter.regexFilter("(?i).*"+filter, cbxFiltro.getSelectedIndex()));
+					tsr.setRowFilter(RowFilter.regexFilter("(?i)"+filter, cbxFiltro.getSelectedIndex()));
 				}
 			});
 			txtFiltro.setBounds(180, 20, 196, 20);
@@ -155,27 +154,15 @@ public class ListEnfermedades extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnModificar = new JButton("");
-				if(Clinica.getLoginUser() instanceof Medico) {
-					btnModificar.setText("Agregar");
-				}
-				else {
-					btnModificar.setText("Modificar");
-				}
+				btnModificar = new JButton("Modificar");
 				btnModificar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(Clinica.getLoginUser() instanceof Medico) {
-							enfAgregar = selected;
-							dispose();
-						}
-						else {
-							RegEnfermedades modEnfermedad = new RegEnfermedades(selected);
-							setAlwaysOnTop(false);
-							modEnfermedad.setVisible(true);
-							setAlwaysOnTop(true);
-							llenarTabla();
-							btnModificar.setEnabled(false);
-						}
+						RegEnfermedades modEnfermedad = new RegEnfermedades(selected);
+						setAlwaysOnTop(false);
+						modEnfermedad.setVisible(true);
+						setAlwaysOnTop(true);
+						llenarTabla();
+						btnModificar.setEnabled(false);
 					}
 				});
 				btnModificar.setEnabled(false);
@@ -209,9 +196,5 @@ public class ListEnfermedades extends JDialog {
 			model.addRow(rows);
 		}
 		textArea.setText("");
-	}
-	
-	public Enfermedad getEnfAgregar() {
-		return enfAgregar;
 	}
 }

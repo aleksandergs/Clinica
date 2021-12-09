@@ -485,10 +485,14 @@ public class ListPaciente extends JDialog {
 							boolean consul = Clinica.getInstance().buscarConsultaHistorial(selectedPaciente, selectedConsulta.getCodConsulta());;
 							if(!consul) {
 								Clinica.getInstance().insertarConsultaHistorial(selectedConsulta, selectedPaciente);
+								setAlwaysOnTop(false);
 								JOptionPane.showMessageDialog(null, "Agregacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+								setAlwaysOnTop(true);
 							}
 							else {
+								setAlwaysOnTop(false);
 								JOptionPane.showMessageDialog(null, "Ya existe esta consulta en el Historial", "Error", JOptionPane.ERROR_MESSAGE);
+								setAlwaysOnTop(true);
 							}
 						}
 						loadHistorial(selectedPaciente);

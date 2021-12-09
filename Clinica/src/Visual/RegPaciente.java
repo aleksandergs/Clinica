@@ -43,17 +43,17 @@ import javax.swing.event.ChangeEvent;
 public class RegPaciente extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JButton btnRegistrar;
+	private JButton btnRegistrar = new JButton();
 	private JTextField txtNombre;
 	private JTextField txtDireccion;
 	private JSpinner spnFecha;
 	private JTextArea txtAlergias;
 	private JComboBox cbxTipoSangre;
 	private JComboBox cbxGenero;
-	private JLabel lblAvisoNombre;
-	private JLabel lblAvisoTelefono;
-	private JLabel lblAvisoCedula;
-	private JLabel lblAvisoDireccion;
+	private JLabel lblAvisoNombre = new JLabel();
+	private JLabel lblAvisoTelefono = new JLabel();
+	private JLabel lblAvisoCedula = new JLabel();
+	private JLabel lblAvisoDireccion = new JLabel();
 	private JFormattedTextField txtCedula;
 	private JFormattedTextField txtTelefono;
 	private Paciente updated = null;
@@ -243,6 +243,12 @@ public class RegPaciente extends JDialog {
 			panel.add(txtDireccion);
 			
 			cbxGenero = new JComboBox();
+			cbxGenero.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					habilitarBoton();
+					validarCamposVacios();
+				}
+			});
 			cbxGenero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			cbxGenero.setModel(new DefaultComboBoxModel(new String[] {"Masculino", "Femenino"}));
 			cbxGenero.setBounds(110, 170, 206, 23);
@@ -252,6 +258,12 @@ public class RegPaciente extends JDialog {
 			panel.add(cbxGenero);
 			
 			cbxTipoSangre = new JComboBox();
+			cbxTipoSangre.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					habilitarBoton();
+					validarCamposVacios();
+				}
+			});
 			cbxTipoSangre.setModel(new DefaultComboBoxModel(new String[] {"O+ positivo", "O- negativo", "A+ positivo", "A- negativo", "B+ positivo", "B- negativo", "AB+positivo", "AB- negativo"}));
 			cbxTipoSangre.setFont(new Font("Tahoma", Font.PLAIN, 13));
 			cbxTipoSangre.setBounds(110, 200, 206, 23);
@@ -265,12 +277,18 @@ public class RegPaciente extends JDialog {
 			panel.add(scrollPane);
 			
 			txtAlergias = new JTextArea();
+			txtAlergias.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+					habilitarBoton();
+					validarCamposVacios();
+				}
+			});
 			scrollPane.setViewportView(txtAlergias);
 			if(updated != null) {
 				txtAlergias.setText(updated.getAlergias());
 			}
 			
-			lblAvisoNombre = new JLabel("");
 			lblAvisoNombre.setForeground(Color.RED);
 			lblAvisoNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAvisoNombre.setBounds(320, 20, 18, 14);
@@ -282,13 +300,11 @@ public class RegPaciente extends JDialog {
 			lblAvisoCedula.setBounds(320, 80, 18, 14);
 			panel.add(lblAvisoCedula);
 			
-			lblAvisoTelefono = new JLabel("");
 			lblAvisoTelefono.setForeground(Color.RED);
 			lblAvisoTelefono.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAvisoTelefono.setBounds(320, 110, 18, 14);
 			panel.add(lblAvisoTelefono);
 			
-			lblAvisoDireccion = new JLabel("");
 			lblAvisoDireccion.setForeground(Color.RED);
 			lblAvisoDireccion.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAvisoDireccion.setBounds(489, 140, 18, 14);
@@ -299,7 +315,6 @@ public class RegPaciente extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				btnRegistrar = new JButton("");
 				btnRegistrar.setEnabled(false);
 				if(updated == null){
 					btnRegistrar.setText("Registrar");

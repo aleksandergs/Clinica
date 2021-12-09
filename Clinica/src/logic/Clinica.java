@@ -304,14 +304,16 @@ public class Clinica implements Serializable{
 		boolean encontradoConsulta = false;
 		boolean encontradoPaci = false;
 		while (!encontradoPaci && i < misPacientes.size()) {
-			while (!encontradoConsulta && j < misPacientes.get(i).getMisConsultas().size())
-			if (misPacientes.get(i).getMisConsultas().get(j).getCodConsulta().equalsIgnoreCase(codConsulta)) {
-				encontradoPaci = true;
-				encontradoConsulta = true;
-				paci = misPacientes.get(i);
+			j = 0;
+			while (!encontradoConsulta && j < misPacientes.get(i).getMisConsultas().size()) {
+				if (misPacientes.get(i).getMisConsultas().get(j).getCodConsulta().equalsIgnoreCase(codConsulta)) {
+					encontradoPaci = true;
+					encontradoConsulta = true;
+					paci = misPacientes.get(i);
+				}
+				j++;
 			}
 			i++;
-			j++;
 		}
 		return paci;
 	}

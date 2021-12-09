@@ -34,12 +34,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class RegConsulta extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
-	private JTextField txtEnfermedad;
 	private JSpinner spnFecha;
 	private JTextArea txtSintomas;
 	private JTextArea txtDiagnostico = new JTextArea();
@@ -49,6 +50,7 @@ public class RegConsulta extends JDialog {
 	private JButton btnRegistrar = new JButton("");
 	private JTextField txtPaciente;
 	private JLabel lblAvisoDiagnostico = new JLabel("*");
+	private JComboBox cbxEnfermedad;
 
 	/**
 	 * Launch the application.
@@ -139,30 +141,6 @@ public class RegConsulta extends JDialog {
 			lblEnfermedad.setBounds(12, 114, 62, 23);
 			panel.add(lblEnfermedad);
 			
-			txtEnfermedad = new JTextField();
-			txtEnfermedad.setEditable(false);
-			txtEnfermedad.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			txtEnfermedad.setBounds(83, 114, 319, 23);
-			if(updated != null) {
-				txtEnfermedad.setText(updated.getEnfermedad().getNombre());
-			}
-			panel.add(txtEnfermedad);
-			txtEnfermedad.setColumns(10);
-			
-			JButton btnNewButton = new JButton("...");
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					ListEnfermedades agregarEnfermedad = new ListEnfermedades();
-					agregarEnfermedad.setVisible(true);
-					if(agregarEnfermedad.getEnfAgregar() != null) {
-						txtEnfermedad.setText(agregarEnfermedad.getEnfAgregar().getCodigo()+":"+agregarEnfermedad.getEnfAgregar().getNombre());
-					}
-				}
-			});
-			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			btnNewButton.setBounds(409, 114, 53, 23);
-			panel.add(btnNewButton);
-			
 			JLabel lblSintomas = new JLabel("Sintomas:");
 			lblSintomas.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblSintomas.setBounds(12, 144, 62, 23);
@@ -218,6 +196,21 @@ public class RegConsulta extends JDialog {
 			lblAvisoDiagnostico.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAvisoDiagnostico.setBounds(325, 144, 18, 14);
 			panel.add(lblAvisoDiagnostico);
+			
+			cbxEnfermedad = new JComboBox();
+			cbxEnfermedad.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					validarCamposVacios();
+					habilitarBoton();
+				}
+			});
+			cbxEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"<<Seleccione>>"}));
+			addComoboBox();
+			cbxEnfermedad.setBounds(83, 114, 319, 23);
+			panel.add(cbxEnfermedad);
+			if(updated != null) {
+				cbxEnfermedad.setSelectedItem(updated.getEnfermedad().getCodigo()+":"+updated.getEnfermedad().getNombre());
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -236,8 +229,8 @@ public class RegConsulta extends JDialog {
 						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 						String fechaConsulta = sdf.format(spnFecha.getValue());
 						Enfermedad disease = null;
-						if(!txtEnfermedad.getText().isEmpty()) {
-							disease = Clinica.getInstance().buscarEnfermedad(txtEnfermedad.getText().substring(0, txtEnfermedad.getText().indexOf(":")));
+						if(cbxEnfermedad.getSelectedIndex() != 0) {
+							disease = Clinica.getInstance().buscarEnfermedad(cbxEnfermedad.getSelectedItem().toString().substring(0, cbxEnfermedad.getSelectedItem().toString().indexOf(":")));
 						}
 						if(updated == null) {
 							Consulta consulta = null;
@@ -283,7 +276,7 @@ public class RegConsulta extends JDialog {
 		spnFecha.setValue(new Date());
 		txtSintomas.setText("");
 		txtDiagnostico.setText("");
-		txtEnfermedad.setText("");
+		cbxEnfermedad.setSelectedIndex(0);
 	}
 	
 	private void habilitarBoton() {
@@ -300,6 +293,14 @@ public class RegConsulta extends JDialog {
 			lblAvisoDiagnostico.setText("*");
 		} else {
 			lblAvisoDiagnostico.setText("");
+		}
+	}
+	
+	private void addComoboBox() {
+		String addValue;
+		for(Enfermedad enf : Clinica.getInstance().getMisEnfermedades()) {
+			addValue = enf.getCodigo()+":"+enf.getNombre();
+			cbxEnfermedad.addItem(addValue);
 		}
 	}
 }
